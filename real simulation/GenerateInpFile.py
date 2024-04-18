@@ -26,7 +26,9 @@ def changeInpFile(E, S):
             resultype = "0"*4 + str(i+1)
             lines.append("\""+newFileName+"."+resultype+"\"\n")
         lines.append("\n\n")
-    lines.append("hello abcxyz")
+    lines.append("\nDelete Load CASE  1 ;\n\n")
+    lines.append("OUTPUT LOCATION OUTPUT_DATA DATA LIST \"load_|310|_REACTIONS #000010\" End ;\n")
+    lines.append("OUTPUT LOCATION OUTPUT_DATA DATA LIST \"Deflection_|351|_DISPLACEMENTS #000010\" End ;")
 
     # Write the modified lines back to the file
     with open(outputFile+"\\"+newFileName+".inp", 'w') as file:
