@@ -24,7 +24,7 @@ def changeInpFile(E, S):
         if i%2 == 0:
             lines.append("STORE TO\n")
             resultype = "0"*4 + str(i+1)
-            lines.append("\""+newFileName+"."+resultype+"\"\n")
+            lines.append("\""+newFileName+"."+resultype[-4:]+"\"\n")
         lines.append("\n\n")
     lines.append("\nDelete Load CASE  1 ;\n\n")
     lines.append("OUTPUT LOCATION OUTPUT_DATA DATA LIST \"load_|310|_REACTIONS #000010\" End ;\n")
