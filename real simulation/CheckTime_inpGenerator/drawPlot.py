@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
 
 def read_txt_file(file_path):
     data = []
@@ -16,9 +17,11 @@ def read_txt_file(file_path):
 def plot_3d(data):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
+
+    data = np.array(data)
     
-    for point in data:
-        ax.scatter(point[1], point[2], point[3])
+    # for point in data[:200]:
+    ax.scatter(data[:500,1], data[:500,2], data[:500,3])
     
     ax.set_xlabel('B')
     ax.set_ylabel('C')

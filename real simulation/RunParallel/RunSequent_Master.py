@@ -8,7 +8,7 @@ from RunSequent2 import *
 from RunSequent3 import *
 
 def RunSimulationThread(idx):
-    inputData = [random.random() for _ in range(10)]
+    inputData = [random.random() for _ in range(11)]
     WriteParameter_K1_Only(inputData,idx)
     printWithTime("Start Simulation")
     RunSimulation(idx)
@@ -16,4 +16,11 @@ def RunSimulationThread(idx):
     RunTool4Atena(idx)
     outputData = ExtractResult(idx)
     save_to_file(inputData,outputData,"Log_Run_B_"+str(idx)+"_1_0604.txt")
+
+def RunSimulationThread_WithInputVal(idx, inputData):
+    WriteParameter(inputData,idx)
+    RunSimulation(idx)
+    RunTool4Atena(idx)
+    outputData = ExtractResult(idx)
+    save_to_file(inputData,outputData,"Log_Run_E_"+str(idx)+"_2004.txt")
 
