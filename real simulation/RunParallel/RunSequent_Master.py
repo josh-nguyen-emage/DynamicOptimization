@@ -7,20 +7,12 @@ from RunSequent1 import *
 from RunSequent2 import *
 from RunSequent3 import *
 
-def RunSimulationThread(idx):
-    inputData = [random.random() for _ in range(11)]
-    WriteParameter_K1_Only(inputData,idx)
+def RunSimulationThread(idx, inputData):
+    WriteParameter(inputData,idx)
     printWithTime("Start Simulation")
     RunSimulation(idx)
     printWithTime("Start Extract Result")
     RunTool4Atena(idx)
     outputData = ExtractResult(idx)
-    save_to_file(inputData,outputData,"Log_Run_B_"+str(idx)+"_1_0604.txt")
-
-def RunSimulationThread_WithInputVal(idx, inputData):
-    WriteParameter(inputData,idx)
-    RunSimulation(idx)
-    RunTool4Atena(idx)
-    outputData = ExtractResult(idx)
-    save_to_file(inputData,outputData,"Log_Run_E_"+str(idx)+"_2004.txt")
+    save_to_file(inputData,outputData,"Log_Run_C_"+str(idx)+".txt")
 

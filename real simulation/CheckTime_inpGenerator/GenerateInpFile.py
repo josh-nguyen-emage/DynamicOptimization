@@ -2,7 +2,7 @@ import cv2
 import random
 
 def changeInpFile(E, S, idx):
-    stdInpFile = "C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\stdFile\\G7-Cyl-Trial-1.inp"
+    stdInpFile = "C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\stdFile\\G7-Cyl-Trial-2.inp"
     outputFile = 'C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\AtenaPool\\'+str(idx)
     with open(stdInpFile, 'r') as file:
         lines = file.readlines()

@@ -30,6 +30,6 @@ def plot_3d(data):
     plt.show()
 
 if __name__ == "__main__":
-    file_path = "Log_Time_0.txt"  # Replace with your file path
+    file_path = "Log_Time_1.txt"  # Replace with your file path
     data = read_txt_file(file_path)
     plot_3d(data)
