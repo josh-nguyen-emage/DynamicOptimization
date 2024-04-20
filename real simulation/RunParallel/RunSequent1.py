@@ -70,6 +70,7 @@ def RunSimulation_timeCheck(idx):
         # Handle any errors raised by subprocess.run
         return False
 
+print(RunSimulation_timeCheck(1))
     
 
 

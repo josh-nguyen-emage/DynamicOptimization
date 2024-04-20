@@ -14,7 +14,8 @@ def RunSimulation_timeCheck(idx):
     command = ["C:\\Program Files (x86)\\CervenkaConsulting\\AtenaV5\\AtenaConsole.exe", cwd + "\\G7-Cyl-Trial-1.inp", "a.out", "a.msg", "a.err"]
 
     try:
-        process = subprocess.Popen(command, cwd="H:\\02.Working-Thinh\\ATENA-WORKING", stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
+        process = subprocess.Popen(command, cwd=cwd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
+        # process = subprocess.Popen(command, cwd=cwd, shell=True)
 
         # Start time
         start_time = time.time()

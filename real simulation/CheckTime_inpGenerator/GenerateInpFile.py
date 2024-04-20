@@ -7,7 +7,8 @@ def changeInpFile(E, S, idx):
     with open(stdInpFile, 'r') as file:
         lines = file.readlines()
 
-    newFileName = "G7-Cyl_AutoGen_E"+str(E)+"_S"+str(S)
+    # newFileName = "G7-Cyl_AutoGen_E"+str(E)+"_S"+str(S)
+    newFileName = "G7-Cyl-Trial-1"
     lines[20] = "TASK name \""+newFileName+"\" \n"
     lines[22] = "Title \""+newFileName+"\" \n"
 
