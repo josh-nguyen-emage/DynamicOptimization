@@ -72,14 +72,14 @@ UNITS // using in GID and Atena
         C19	0.40
         C20	0.14
         C21	0.99
+        BAND_COMPRESSION	0.002
+        BAND_TENSION	0.002
         BAND 30.000000e-03      // Band compression = tension = 30mm  
         Idealisation 3D
  ;
-
 GEOMETRY ID 1
   NAME "Geometry #1 as name CCMicroplane4"
   Type   "3D" ;
-
 
 // Coordinate definition. Suma= 1936
 JOINT COORDINATES
