@@ -14,7 +14,7 @@ def RunSimulationThread(idx):
         changeInpFile(E,S,idx)
         printWithTime("Start Simulation")
         runTime = RunSimulation_timeCheck(idx)
-        save_to_file([idx,E,S],runTime,"Log_Time_1.txt")
+        save_to_file([idx,E,S],runTime,"Log_Time_2.txt")
 
 # RunSimulationThread(0)
 
