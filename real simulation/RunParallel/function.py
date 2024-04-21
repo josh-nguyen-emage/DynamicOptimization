@@ -67,6 +67,11 @@ def WriteParameter(data,idx):
     E  = data[10]*13000 + 57000
     writeInpFile(K1,C1,C3,C4,C5,C7,C8,C10,C11,C12, E,idx)
 
+def WriteParameter_K1_Only(data,idx):
+    data = np.clip(data,0,1)
+    K1 = data[0]*0.00034+0.000114
+    writeInpFile(K1=K1,idx=idx)
+
 def writeInpFile(
         K1=0.00027, 
         C1=0.62, 
@@ -111,24 +116,3 @@ def printWithTime(outString):
     seconds = current_time.second
 
     print(f"{hours:02d}-{minutes:02d}-{seconds:02d} : "+outString)
-
-def ReadLabFile(filename):
-    list_a = []
-    list_b = []
-    list_c = []
-
-    with open(filename, 'r') as file:
-        for line in file:
-            values = line.strip().split()
-            if len(values) != 3:
-                print(f"Ignoring line: {line.strip()}. Expected 3 values per line.")
-                continue
-            try:
-                a, b, c = map(float, values)
-                list_a.append(a)
-                list_b.append(b)
-                list_c.append(c)
-            except ValueError:
-                print(f"Ignoring line: {line.strip()}. Could not convert values to floats.")
-
-    return list_a, list_b, list_c

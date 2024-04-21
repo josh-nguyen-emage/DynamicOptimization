@@ -15,7 +15,7 @@ list_a = np.array(list_a)*0.01
 Y_exp = list_c
 Z_exp = list_a
 
-X, Y, Z = read_file("Log_Run_A_1_0304.txt")
+X, Y, Z = read_file("D:/1 - Study/6 - DTW_project/RunLog/Log_Run_A_1_0304.txt")
 Y = Y[:,1:]
 Z = Z[:,1:]
 Y *= -100
