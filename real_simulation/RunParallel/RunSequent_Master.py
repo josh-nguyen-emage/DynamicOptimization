@@ -9,10 +9,9 @@ from RunSequent3 import *
 
 def RunSimulationThread(idx, inputData):
     WriteParameter(inputData,idx)
-    printWithTime("Start Simulation")
     RunSimulation(idx)
-    printWithTime("Start Extract Result")
     RunTool4Atena(idx)
     outputData = ExtractResult(idx)
-    save_to_file(inputData,outputData,"Log_Run_C_"+str(idx)+".txt")
+    save_to_file(inputData,outputData,"RunLog\\Log_Run_E_Phase1.txt")
+    return outputData
 

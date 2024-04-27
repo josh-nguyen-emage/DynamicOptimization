@@ -1,12 +1,11 @@
 import sys, os
-import threading
 sys.path.append(os.path.abspath(os.path.join('.')))
 import numpy as np
 from keras import layers, models
 import matplotlib.pyplot as plt
 
-
-from RunParallel.RunSequent_Master import RunSimulationThread_WithInputVal
+from real_simulation.RunParallel.RunSequent_Master import RunSimulationThread
+from real_simulation.GlobalLib import findF, getExpectChart
 
 def create_model():
     model = models.Sequential([
@@ -27,24 +26,11 @@ def predict(model, X_test):
 
 def runSimulation(params):
     params = np.clip(params, 0, 1)
-    threads = []
-    numThread = len(params)
-    y_values = [0]*numThread
-    
-    # Define a function to run in each thread
-    def run_thread(idx, param):
-        result = RunSimulationThread_WithInputVal(idx, param)
-        y_values[idx] = result
-
-    for idx in range(numThread):
-        thread = threading.Thread(target=run_thread, args=(idx, params[idx]))
-        thread.start()
-        threads.append(thread)
-
-    for thread in threads:
-        thread.join()
-        
-    return np.array(y_values)
+    simulationResult = RunSimulationThread(0, params)
+    strain = simulationResult[0]
+    stress = simulationResult[1]
+    MSE, interpolate = findF(strain,stress)
+    return np.array(interpolate)
 
 def generateSeed(bestSeed):
     seedCollector = [bestSeed]
@@ -60,7 +46,7 @@ if __name__ == "__main__":
     X_train = []
     y_train = []
 
-    expectChart = runSimulation(params=expectParams)
+    expectChart = getExpectChart()
 
     addX = np.random.rand(11)
     X_train.append(addX)
@@ -74,22 +60,23 @@ if __name__ == "__main__":
     train_model(model, X_train_np, y_train_np)
 
     counter = 0
-    bestSeedIdx = np.argmin(np.sum(abs(y_train_np-expectChart),1))
+    bestSeedIdx = np.argmin(np.sum((y_train_np-expectChart)**2,1))
     bestSeed = X_train[bestSeedIdx]
-    oldOffset = min(np.sum(abs(y_train_np-expectChart),1))
+    oldOffset = min(np.sum((y_train_np-expectChart)**2,1))
 
     while 0:
         counter += 1
         randomSeed = generateSeed(bestSeed)
         predictions = predict(model, randomSeed)
 
-        offset = np.sum(abs(predictions-expectChart),1)
+        offset = np.sum((predictions-expectChart)**2,1)
         nexVal = randomSeed[np.argmin(offset)]
 
         X_train.append(nexVal)
-        y_train.append(runSimulation(nexVal))
+        simulationResult = runSimulation(nexVal)
+        y_train.append(simulationResult)
 
-        currentOffset = np.sum(abs(runSimulation(nexVal)-expectChart))
+        currentOffset = np.sum((simulationResult-expectChart)**2)
         if currentOffset < oldOffset:
             oldOffset = currentOffset
             bestSeed = nexVal
@@ -101,8 +88,5 @@ if __name__ == "__main__":
         model = create_model()
         train_model(model, X_train_np, y_train_np)
 
-        if counter > 16:
-            break
-        if abs(currentOffset) < 1:
-            print("FUCK yeah")
+        if counter > 128:
             break
