@@ -39,42 +39,41 @@ UNITS // using in GID and Atena
   NAME
    "Material #1 as USER name G7"
   TYPE
-        "CCMicroplane4"
+   "CCMicroplane4"
+        
+        MU     2.0e-01
         RHO    2.5e-02
         ALPHA  1.2e-05
-        NP     21       
-        E	   66131.9   // thay E
-        MU	0.20E-01   
- //     K1	2.81E-04   // thay K1 trial 0 
-        K1	2.75E-04   // thay K1
-        K2	500.00
-        K3	15.00
-        K4	150.00
-        C1	0.70     // thay C1
+        NP     21
+        E	     53000
+        K1	0.00042
+        K2	500
+        K3	15
+        K4	150
+        C1	0.62
         C2	2.76
-//        C3	64.00     // thay C3 trial 0
-        C3	14.00     // thay C3 trial 1
-        C4	70.00
-        C5	2.50
+        C3	4.0
+        C4	70
+        C5	1.50
         C6	1.30
-        C7	50.00
+        C7	50
         C8	8.00
         C9	1.30
         C10	0.73
         C11	0.20
-        C12	700.00
+        C12	7000
         C13	0.23
         C14	0.80
-        C15	1.00
+        C15	1.0
         C16	0.02
         C17	0.01
-        C18	1.00
+        C18	1.0
         C19	0.40
         C20	0.14
         C21	0.99
         BAND_COMPRESSION	0.002
         BAND_TENSION	0.002
-        BAND 30.000000e-03      // Band compression = tension = 30mm  
+        BAND 2.000000e-03
         Idealisation 3D
  ;
 GEOMETRY ID 1
