@@ -5,7 +5,7 @@ import numpy as np
 import cv2
 import pyautogui
 
-from define import *
+from real_simulation.GlobalLib import pathIdx
 
 def find_and_click_template(template_path):
     print("Press template ",template_path)

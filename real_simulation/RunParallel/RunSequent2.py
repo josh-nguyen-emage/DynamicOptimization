@@ -1,14 +1,7 @@
 import os
 import subprocess
-import time
-import cv2
-import numpy as np
-import pygetwindow as gw
-import pyautogui
 
-from function import *
-from define import *
-
+from real_simulation.GlobalLib import pathIdx
         
 def RunTool4Atena(idx):
     if os.path.exists(pathIdx(idx)+'G7-Cyl-Trial-1_NODES_STRAIN.atf'):

@@ -13,7 +13,7 @@ def create_model():
         layers.Dense(128, activation='relu'),
         layers.Dense(256, activation='relu'),
         layers.Dense(128, activation='relu'),
-        layers.Dense(50, activation='sigmoid')
+        layers.Dense(75, activation='sigmoid')
     ])
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     return model
@@ -29,6 +29,8 @@ def runSimulation(params):
     simulationResult = RunSimulationThread(0, params)
     strain = simulationResult[0]
     stress = simulationResult[1]
+    strain = -1000*np.array(strain)
+    stress = -1*np.array(stress)
     MSE, interpolate = findF(strain,stress)
     return np.array(interpolate)
 
@@ -64,7 +66,7 @@ if __name__ == "__main__":
     bestSeed = X_train[bestSeedIdx]
     oldOffset = min(np.sum((y_train_np-expectChart)**2,1))
 
-    while 0:
+    while 1:
         counter += 1
         randomSeed = generateSeed(bestSeed)
         predictions = predict(model, randomSeed)

@@ -1,8 +1,7 @@
 import sys
 import numpy as np
 
-
-from define import *
+from real_simulation.GlobalLib import pathIdx, pathName
 
 def read_integers_from_file(txt_path):
     # Initialize an empty list to store integers

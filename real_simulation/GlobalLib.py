@@ -1,7 +1,12 @@
 import numpy as np
 from scipy.interpolate import interp1d
 
-from try_trainModel import ReadLabFile,
+from real_simulation.try_trainModel import ReadLabFile
+
+pathName = "H:\\02.Working-Thinh\\ATENA-WORKING\\"
+
+def pathIdx(idx):
+    return "C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\AtenaPool\\"+str(idx)+"\\"
 
 filename = 'stdFile\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
 list_a, list_b, list_c = ReadLabFile(filename)
