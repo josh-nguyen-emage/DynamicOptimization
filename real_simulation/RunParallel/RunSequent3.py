@@ -36,7 +36,7 @@ def extractFile(nodeList,fileName,idx):
                     currentSum += float(filtered_list[2])
                     
             except:
-                pass
+                pass    
             if "-----" in line:
                 dataExtracted.append(currentSum/len(nodeList))
                 currentSum = 0
@@ -49,6 +49,11 @@ def ExtractResult(idx):
 
     strainVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_STRAIN.atf",idx)
     stressVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_STRESS.atf",idx)
+
+    step = 4 / 49
+    predictY = strainVal
+    strainVal = [i * (step + 1) for i in range(50)]
+    print(predictY,strainVal)
 
     
 

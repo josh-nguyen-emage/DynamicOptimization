@@ -16,23 +16,14 @@ def RunSimulation_timeCheck(idx):
     try:
         process = subprocess.Popen(command, cwd="H:\\02.Working-Thinh\\ATENA-WORKING", stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
-        # Start time
         start_time = time.time()
-
         while True:
             if process.poll() is not None:
-                # Process has terminated
                 return True
-            
-            # Check if timeout reached
             if time.time() - start_time > 60:  # 900 seconds = 15 minutes
-                # Timeout reached, terminate the process
                 process.terminate()
                 return False
-            
-            # Sleep for a short while to avoid busy waiting
             time.sleep(1)
 
     except subprocess.CalledProcessError:
-        # Handle any errors raised by subprocess.run
         return False

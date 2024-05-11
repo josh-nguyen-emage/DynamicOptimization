@@ -1,11 +1,13 @@
 
 from function import *
-from RunSequent1 import *
-from RunSequent2 import *
-from RunSequent3 import *
 
 from scipy.interpolate import interp1d
 from scipy.optimize import minimize
+
+from real_simulation.RunParallel.RunSequent1 import RunSimulation
+from real_simulation.RunParallel.RunSequent2 import RunTool4Atena
+from real_simulation.RunParallel.RunSequent3 import ExtractResult
+from real_simulation.try_trainModel import ReadLabFile
 
 def interpolate_line(x_values, y_values, X_interpolate):
     """
@@ -30,13 +32,12 @@ def interpolate_line(x_values, y_values, X_interpolate):
 def findF(predictY, predictZ):
     global Y_exp
     global Z_exp
-
     Z_perdict_expBase = interpolate_line(predictY, predictZ,Y_exp)
     sumSquare = (Z_perdict_expBase-Z_exp)**2
     return np.nanmean(sumSquare)
 
 
-filename = 'G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
+filename = 'stdFile\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
 list_a, list_b, list_c = ReadLabFile(filename)
 list_c = np.array(list_c)*(-1000)
 list_a = np.array(list_a)*1
@@ -62,7 +63,7 @@ class DTW:
         RunSimulation(self.index)
         RunTool4Atena(self.index)
         outputData = ExtractResult(self.index)
-        save_to_file(params,outputData,"Log_Run_D_"+self.method+".txt")
+        # save_to_file(params,outputData,"Log_Run_F_"+self.method+".txt")
         strain = -1000*np.array(outputData[0])
         stress = -1*np.array(outputData[1])
         MSE = findF(strain[1:],stress[1:])

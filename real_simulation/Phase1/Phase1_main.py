@@ -40,7 +40,7 @@ def generateSeed(bestSeed):
         changeTime = np.random.randint(1,11)
         newSeed = np.copy(bestSeed)
         for _ in range(changeTime):
-            newSeed[np.random.randint(11)] += np.random.rand()
+            newSeed[np.random.randint(11)] = np.random.rand()
         seedCollector.append(np.clip(newSeed,0,1))
     return np.concatenate((np.array(seedCollector),np.random.rand(512,11)),axis=0)
 
@@ -62,23 +62,23 @@ if __name__ == "__main__":
     train_model(model, X_train_np, y_train_np)
 
     counter = 0
-    bestSeedIdx = np.argmin(np.sum((y_train_np-expectChart)**2,1))
+    bestSeedIdx = np.argmin(np.mean((y_train_np-expectChart)**2,1))
     bestSeed = X_train[bestSeedIdx]
-    oldOffset = min(np.sum((y_train_np-expectChart)**2,1))
+    oldOffset = min(np.mean((y_train_np-expectChart)**2,1))
 
     while 1:
         counter += 1
         randomSeed = generateSeed(bestSeed)
         predictions = predict(model, randomSeed)
 
-        offset = np.sum((predictions-expectChart)**2,1)
+        offset = np.mean((predictions-expectChart)**2,1)
         nexVal = randomSeed[np.argmin(offset)]
 
         X_train.append(nexVal)
         simulationResult = runSimulation(nexVal)
         y_train.append(simulationResult)
 
-        currentOffset = np.sum((simulationResult-expectChart)**2)
+        currentOffset = np.mean((simulationResult-expectChart)**2)
         if currentOffset < oldOffset:
             oldOffset = currentOffset
             bestSeed = nexVal
@@ -90,5 +90,5 @@ if __name__ == "__main__":
         model = create_model()
         train_model(model, X_train_np, y_train_np)
 
-        if counter > 128:
-            break
+        # if counter > 512:
+        #     break
