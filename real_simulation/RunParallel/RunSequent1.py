@@ -1,13 +1,19 @@
 import time
 import subprocess
 
+# def RunSimulation(idx):
+#     cwd = "C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\AtenaPool\\"+str(idx)
+#     subprocess.run("start /wait cmd /c \"C:\\Program Files (x86)\\CervenkaConsulting\\AtenaV5\\AtenaConsole.exe\" "+cwd+"\\G7-Cyl-Trial-1.inp a.out a.msg a.err",
+#                 cwd=cwd,
+#                 stdout=subprocess.DEVNULL,
+#                 shell=True,
+#                 check=True)
+
 def RunSimulation(idx):
     cwd = "C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\AtenaPool\\"+str(idx)
-    subprocess.run("start /wait cmd /c \"C:\\Program Files (x86)\\CervenkaConsulting\\AtenaV5\\AtenaConsole.exe\" "+cwd+"\\G7-Cyl-Trial-1.inp a.out a.msg a.err",
-                cwd=cwd,
-                stdout=subprocess.DEVNULL,
-                shell=True,
-                check=True)
+    command = ["C:\\Program Files (x86)\\CervenkaConsulting\\AtenaV5\\AtenaConsole.exe", cwd + "\\G7-Cyl-Trial-1.inp", "a.out", "a.msg", "a.err"]
+    process = subprocess.Popen(command, cwd=cwd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
+    process.wait()
 
 def RunSimulation_timeCheck(idx):
     cwd = "C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\AtenaPool\\" + str(idx)
