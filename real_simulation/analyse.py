@@ -1,41 +1,38 @@
-from keras.models import load_model
+import sys, os
+sys.path.append(os.path.abspath(os.path.join('.')))
+
 from matplotlib import pyplot as plt
 import numpy as np
-import keras.backend as K
 
-from try_trainModel import ReadLabFile, read_file
+from real_simulation.GlobalLib import findF
+from real_simulation.RunSequent.function import ReadLabFile, read_file
 
 # ------------------------------------------
 
-filename = 'G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
+filename = 'stdFile\\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
 list_a, list_b, list_c = ReadLabFile(filename)
-list_c = np.array(list_c)*(-100)
-list_a = np.array(list_a)*0.01
+list_c = np.array(list_c)*(-1000)
+list_a = np.array(list_a)*1
 
 Y_exp = list_c
 Z_exp = list_a
 
-X, Y, Z = read_file("D:/1 - Study/6 - DTW_project/RunLog/Log_Run_A_1_0304.txt")
+X, Y, Z = read_file("RunLog\\Log_Run_E_Phase1.txt")
 Y = Y[:,1:]
 Z = Z[:,1:]
-Y *= -100
-Z *= -0.01
+Y *= -1000
+Z *= -1
 
-index = 126
+for idx in range(len(X)):
+    idx = 10
+    plt.plot(Y_exp,Z_exp, label='Simulation Line')
+    plt.plot(Y[idx][:50],Z[idx][:50], label='Predict Line')
+    plt.xlabel('Strain')
+    plt.ylabel('Stress')
+    mean, predic = findF(Y[idx],Z[idx])
+    print(np.mean((predic-Z_exp)**2,1))
+    plt.title(str(idx) + " : " + str(mean))
+    plt.legend()
+    plt.show()
 
-# Load the model
-model = load_model('last.h5')
-
-testcase = np.concatenate((X[index],Y_exp[:50]))
-
-# Make predictions
-predictions = model.predict(np.array([testcase],dtype="float32"))
-
-index = 126
-plt.plot(Y_exp[:50],Z_exp[:50], label='Simulation Line')
-plt.plot(Y_exp[:50],predictions[0][:50], label='Predict Line')
-plt.xlabel('Strain')
-plt.ylabel('Stress')
-plt.title('Predict - Simulation compare')
-plt.legend()
-plt.show()
+    break
