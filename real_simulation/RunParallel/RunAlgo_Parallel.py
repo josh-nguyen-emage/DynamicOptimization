@@ -64,6 +64,7 @@ class DTW:
         RunTool4Atena(self.index)
         outputData = ExtractResult(self.index)
         # save_to_file(params,outputData,"Log_Run_F_"+self.method+".txt")
+        save_to_file(params,outputData,"Log_Run_debug.txt")
         strain = -1000*np.array(outputData[0])
         stress = -1*np.array(outputData[1])
         MSE = findF(strain[1:],stress[1:])
@@ -91,5 +92,6 @@ def RunAlgo(index):
             file.write(f"{number}\n")
     print(f"Run Completed")
 
-
+if __name__ == "__main__":
+    RunAlgo(0)
 
