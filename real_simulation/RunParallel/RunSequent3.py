@@ -47,20 +47,18 @@ def ExtractResult(idx):
 
     nodeList = read_integers_from_file(pathName+'NodeList_Mid.txt')
 
-    strainVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_STRAIN.atf",idx)
+    # strainVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_STRAIN.atf",idx)
     stressVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_STRESS.atf",idx)
 
-    step = 4 / 49
-    predictY = strainVal
-    strainVal = [i * (step + 1) for i in range(50)]
-    print(predictY,strainVal)
-
-    
-
-    # for num in dataExtracted:
-    #     print(num)
+    strainVal = [0.04]
+    for i in range(1, 51):
+        strainVal.append(strainVal[i-1] + 0.08)
+    strainVal[-1] = 4
+  
 
     return [strainVal, stressVal]
 
 # ExtractResult()
+
+
 

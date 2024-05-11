@@ -1,12 +1,13 @@
 
+import sys, os
+sys.path.append(os.path.abspath(os.path.join('.')))
 import datetime
 import time
 import numpy as np
 import cv2
 import pyautogui
-import keyboard
 
-from define import *
+from real_simulation.GlobalLib import *
 
 def find_and_click_template(template_path):
     print("Press template ",template_path)
