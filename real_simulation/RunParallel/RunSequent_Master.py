@@ -11,6 +11,6 @@ def RunSimulationThread(idx, inputData):
     RunSimulation(idx)
     RunTool4Atena(idx)
     outputData = ExtractResult(idx)
-    save_to_file(inputData,outputData,"RunLog\\Log_Run_E_Phase1.txt")
+    save_to_file(inputData,outputData,"RunLog\\Log_Run_E3_Phase1.txt")
     return outputData
 
