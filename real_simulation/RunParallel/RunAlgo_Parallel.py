@@ -63,11 +63,11 @@ class DTW:
         RunSimulation(self.index)
         RunTool4Atena(self.index)
         outputData = ExtractResult(self.index)
-        # save_to_file(params,outputData,"Log_Run_F_"+self.method+".txt")
-        save_to_file(params,outputData,"Log_Run_debug.txt")
-        strain = -1000*np.array(outputData[0])
+        save_to_file(params,outputData,"Log_Run_F_"+self.method+".txt")
+        # save_to_file(params,outputData,"Log_Run_debug.txt")
+        strain = np.array(outputData[0])
         stress = -1*np.array(outputData[1])
-        MSE = findF(strain[1:],stress[1:])
+        MSE = findF(strain,stress[1:52])
         print("curent MSE of",self.method,":",MSE)
         return MSE
 

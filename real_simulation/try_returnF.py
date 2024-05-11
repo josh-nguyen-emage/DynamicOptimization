@@ -80,17 +80,12 @@ def draw_dot_plot(x_list, y_list, name_list):
     plt.show()
 
 
-X, Y, Z = read_file("RunLog\Log_Run_B_0_1_0604.txt")
-Y = Y[:,1:]
-Z = Z[:,1:]
-Y *= -1000
+X, Y, Z = read_file("Log_Run_debug.txt")
+Z = Z[:,1:52]
 Z *= -1
-Z *= 0.8
 
-index = -1*i
+index = 0
 F_value, interpolateValue = findF(Y[index],Z[index][:50])
-if F_value < 0:
-    continue
 
 K1 = X[index][0]*0.00034+0.000114
 C1 = X[index][1]*0.8+0.1
@@ -117,7 +112,7 @@ TextVal += "C12 : "+    "{:.6f}".format(C12)
 # ------------------------------------------------------------
 
 plt.figure(figsize=(13, 8))
-plt.plot(Y[index],Z[index][:50], label="Simulation Value")
+plt.plot(Y[index],Z[index], label="Simulation Value")
 plt.plot(list_c,list_a, marker="o", label="Experiment Value")
 plt.plot(list_c,interpolateValue, marker="o", label="Simulation Interpolation")
 plt.text(0.35,0, TextVal, fontsize=14)
