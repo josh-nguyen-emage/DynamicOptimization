@@ -86,11 +86,11 @@ def RunAlgo(index):
     dtw = DTW(methodList[index],index)
     bounds = [(0, 1)] * 11
     result = minimize(dtw.objective_function, initParam, method=methodList[index], bounds=bounds)
-    print(result.x)
-    with open("result_"+methodList[index]+".txt", 'w') as file:
-        for number in result.x:
-            file.write(f"{number}\n")
-    print(f"Run Completed")
+    # print(result.x)
+    # with open("result_"+methodList[index]+".txt", 'w') as file:
+    #     for number in result.x:
+    #         file.write(f"{number}\n")
+    print(f"{methodList[index]} Run Completed")
 
 if __name__ == "__main__":
     RunAlgo(0)

@@ -10,7 +10,7 @@ def Process(idx):
     RunAlgo(idx)
 
 timeColector = []
-numThread = 1
+numThread = 9
 
 
 # Create a list to hold the thread objects
