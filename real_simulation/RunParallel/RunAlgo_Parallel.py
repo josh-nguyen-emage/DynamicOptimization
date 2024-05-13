@@ -47,9 +47,6 @@ Z_exp = list_a
 
 
 class DTW:
-    # Class attribute
-    species = "Canis familiaris"
-
     # Constructor method (initializer)
     def __init__(self, method, index):
         # Instance attributes
