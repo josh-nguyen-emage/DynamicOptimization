@@ -45,9 +45,9 @@ def findF(predictY, predictZ):
     global Y_exp
     global Z_exp
 
-    Z_perdict_expBase = interpolate_line(predictY[:50], predictZ[:50],Y_exp)
+    Z_perdict_expBase = interpolate_line(predictY, predictZ,Y_exp)
+    Z_perdict_expBase[0] = Z_exp[0]
     sumSquare = (Z_perdict_expBase-Z_exp)**2
-    Z_perdict_expBase[0] = 0
 
     return np.nanmean(sumSquare), Z_perdict_expBase
 

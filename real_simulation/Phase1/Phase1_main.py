@@ -29,9 +29,9 @@ def runSimulation(params):
     simulationResult = RunSimulationThread(0, params)
     strain = simulationResult[0]
     stress = simulationResult[1]
-    strain = -1000*np.array(strain)
+    strain = np.array(strain)
     stress = -1*np.array(stress)
-    MSE, interpolate = findF(strain,stress)
+    MSE, interpolate = findF(strain,stress[1:52])
     return np.array(interpolate)
 
 def generateSeed(bestSeed):
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     y_train_np = np.array(y_train)
 
     model = create_model()
-    train_model(model, X_train_np, y_train_np)
+    train_model(model, X_train_np, y_train_np/200)
 
     counter = 0
     bestSeedIdx = np.argmin(np.mean((y_train_np-expectChart)**2,1))
@@ -70,6 +70,7 @@ if __name__ == "__main__":
         counter += 1
         randomSeed = generateSeed(bestSeed)
         predictions = predict(model, randomSeed)
+        predictions = np.array(predictions)*200
 
         offset = np.mean((predictions-expectChart)**2,1)
         nexVal = randomSeed[np.argmin(offset)]
@@ -88,7 +89,7 @@ if __name__ == "__main__":
         X_train_np = np.array(X_train)
         y_train_np = np.array(y_train)
         model = create_model()
-        train_model(model, X_train_np, y_train_np)
+        train_model(model, X_train_np, y_train_np/200)
 
         # if counter > 512:
         #     break
