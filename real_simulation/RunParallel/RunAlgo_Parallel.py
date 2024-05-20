@@ -77,8 +77,7 @@ class DTW:
 # --------------------------
 def RunAlgo(index):
     initParam = [0.5]*11
-    initParam[2] = 0.2
-    initParam[8] = 0.8
+    initParam = [0.20398719096599705,0.9553720675791246,0.7055419216098967,0.9941247570413594,0.8911491304079948,0.8929546254803749,0.9816650429194598,0.5469467002382876,0.8414270051383659,0.705789405032828,0.3891777396691328]
     methodList = ['Nelder-Mead', 'Powell', 'CG', 'BFGS', 'L-BFGS-B', 'TNC', 'COBYLA', 'SLSQP', 'trust-constr']
     dtw = DTW(methodList[index],index)
     bounds = [(0, 1)] * 11
