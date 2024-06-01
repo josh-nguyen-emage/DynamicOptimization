@@ -1,4 +1,5 @@
 import sys
+import time
 import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense
@@ -50,14 +51,22 @@ def ReadLabFile(filename):
 
 # ------------------------------------------
 
+def save_lists_to_file(list1, list2, filename):
+    with open(filename, 'w') as file:
+        for item in list1:
+            file.write(f"{item}\n")
+        file.write("===\n")  # Separator between lists
+        for item in list2:
+            file.write(f"{item}\n")
+
 if __name__ == "__main__":
 
-    filename = 'G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
+    filename = 'stdFile\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
     list_a, list_b, list_c = ReadLabFile(filename)
     list_c = np.array(list_c)*(-100)
     list_a = np.array(list_a)*0.01
 
-    X, Y, Z = read_file("Log_Run_A_1_0304.txt")
+    X, Y, Z = read_file("RunLog\Log_Run_A_1_0304.txt")
     Y = Y[:,1:]
     Z = Z[:,1:]
     Y *= -100
@@ -81,14 +90,16 @@ if __name__ == "__main__":
 
     # Compile the model
     model.compile(optimizer='adam', loss='mse', metrics=[accuracy])  # Using Mean Squared Error loss for regression
-
+    start = time.time()
     # Train the model
     history = model.fit(X_train, y_train, epochs=128, batch_size=32, validation_data=(X_test, y_test))  # Adjust epochs and batch size as needed
-
+    print(time.time()-start)
+    sys.exit()
     model.save("last.h5")
 
     plt.plot(history.history['accuracy'], label='Training Accuracy')
     plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+    save_lists_to_file(history.history['accuracy'],history.history['val_accuracy'],"pltDraw.txt")
     plt.xlabel('Epoch')
     plt.ylabel('Accuracy')
     plt.title('Training and Validation Accuracy')
