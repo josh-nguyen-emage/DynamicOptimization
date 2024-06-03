@@ -67,7 +67,7 @@ def generateSeed(bestSeed):
         seedCollector.append(np.clip(newSeed,0,1))
     return np.concatenate((np.array(seedCollector),np.random.rand(2048,11)),axis=0)
 
-def getBestValue(lst,numValue):
+def getBestValue(lst,randomSeed,numValue):
     expectChart = getExpectChart()
     offset = np.mean((lst-expectChart)**2,1)
     
@@ -78,21 +78,24 @@ def getBestValue(lst,numValue):
     sorted_lst = sorted(enumerated_lst, key=lambda x: x[1])
     
     # Get the indices of the 8 smallest values
-    value_of_smallest = [lst[index] for index, _ in sorted_lst[:numValue]]
+    value_of_smallest = [randomSeed[index] for index, _ in sorted_lst[:numValue]]
     
     return value_of_smallest
 
 if __name__ == "__main__":
-    normalizeRatio = 200
+    normalizeRatio = 250
 
     X_train = []
     y_train = []
 
     expectChart = getExpectChart()
 
-    addX = np.random.rand(11)
-    X_train.append(addX)
-    y_train.append(runSingleSimulation(addX))
+    addX = np.random.rand(16,11)
+    for eachX in addX:
+        X_train.append(eachX)
+    simulationResult = run_simulation(addX)
+    for eachY in simulationResult:
+        y_train.append(eachY)
 
     print("Gen data completed")
     X_train_np = np.array(X_train)
@@ -112,7 +115,7 @@ if __name__ == "__main__":
         predictions = predict(model, randomSeed)
         predictions = np.array(predictions)*normalizeRatio
 
-        nexVal = getBestValue(predictions,8)
+        nexVal = getBestValue(predictions,randomSeed,16)
         for eachVal in nexVal:
             X_train.append(eachVal)
         simulationResult = run_simulation(nexVal)

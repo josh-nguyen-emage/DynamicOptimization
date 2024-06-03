@@ -32,7 +32,7 @@ def ReadLabFile(filename):
 
     return list_a, list_b, list_c
 
-filename = 'stdFile\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
+filename = 'C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\stdFile\\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
 list_a, list_b, list_c = ReadLabFile(filename)
 list_c = np.array(list_c)*(-1000)
 list_a = np.array(list_a)
