@@ -13,6 +13,8 @@ class DTW:
         self.index = index
 
     def objective_function(self,x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11):
+        return -(x1 + 2*x2 + x3*x4 - x5 + (x6+x7)*(x8 + x9) + x10 + x11)
+    
         params = [x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11]
         WriteParameter(params, self.index)
         RunSimulation(self.index)
@@ -48,15 +50,17 @@ if __name__ == "__main__":
         f=dtw.objective_function,
         pbounds=pbounds,
         random_state=1,
+        allow_duplicate_points=True
     )
 
     # Thực hiện quá trình tối ưu hóa
     optimizer.maximize(
         init_points=10,  # Số lượng điểm khởi tạo ngẫu nhiên
-        n_iter=300,      # Số lần lặp tối ưu hóa
+        n_iter=20      # Số lần lặp tối ưu hóa
     )
 
     # In kết quả tối ưu
+    print(optimizer.max)
     print(optimizer.max)
 
 

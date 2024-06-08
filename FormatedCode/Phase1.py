@@ -84,6 +84,7 @@ def getBestValue(lst,randomSeed,numValue):
     
     return value_of_smallest
 
+
 if __name__ == "__main__":
     normalizeRatio = 250
 

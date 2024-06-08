@@ -1,13 +1,13 @@
 import sys, os
 import threading
-
+from bayes_opt import BayesianOptimization
 from Libary.RunSequent import RunSimulationThread
 sys.path.append(os.path.abspath(os.path.join('.')))
 import numpy as np
 from keras import layers, models
-
 from Libary.function import *
 
+normalizeRatio = 250
 def create_model():
     model = models.Sequential([
         layers.Dense(64, activation='relu', input_shape=(11,)),
@@ -27,17 +27,19 @@ def predict(model, X_test):
 
 def runSingleSimulation(params):
     params = np.clip(params, 0, 1)
-    simulationResult = RunSimulationThread(0, params)
-    strain = simulationResult[0]
-    stress = simulationResult[1]
-    MSE, interpolate = findF(strain,stress)
+    simulation_result = RunSimulationThread(0, params)
+    strain = simulation_result[0]
+    stress = simulation_result[1]
+    bodyOpen = simulation_result[2]
+    MSE, interpolate = findF(stress, bodyOpen, strain)
     return np.array(interpolate)
 
 def run_simulation_thread(paramIdx, param, resultInterpolate):
     simulation_result = RunSimulationThread(paramIdx, param)
     strain = simulation_result[0]
     stress = simulation_result[1]
-    MSE, interpolate = findF(strain, stress)
+    bodyOpen = simulation_result[2]
+    MSE, interpolate = findF(stress, bodyOpen, strain)
     resultInterpolate[paramIdx] = interpolate
 
 def run_simulation(params):
@@ -57,38 +59,34 @@ def run_simulation(params):
     
     return np.array(resultInterpolate)
 
-def generateSeed(bestSeed):
-    seedCollector = [bestSeed]
-    for _ in range(2047):
-        changeTime = np.random.randint(1,11)
-        newSeed = np.copy(bestSeed)
-        for _ in range(changeTime):
-            newSeed[np.random.randint(11)] = np.random.rand()
-        seedCollector.append(np.clip(newSeed,0,1))
-    return np.concatenate((np.array(seedCollector),np.random.rand(2048,11)),axis=0)
 
-def getBestValue(lst,randomSeed,numValue):
-    expectChart = getExpectChart()
-    offset = np.mean((lst-expectChart)**2,1)
+class DTW:
+    def __init__(self):
+        self.model = create_model()
+        self.container = []
+
+    def objective_function(self,params):
+        params = np.clip(params,0,1)
+        predictVal = self.model.predict([params], verbose=0)
+        predictVal = np.array(predictVal)*normalizeRatio
+        expectChart = getExpectChart()
+        MSE = np.nanmean((predictVal-expectChart)**2)
+        self.container.append([MSE,params])
+        return MSE
     
-    # Enumerate the list to keep track of indices
-    enumerated_lst = list(enumerate(offset))
-    
-    # Sort the list of tuples by the second element (the values) in ascending order
-    sorted_lst = sorted(enumerated_lst, key=lambda x: x[1])
-    
-    # Get the indices of the 8 smallest values
-    value_of_smallest = [randomSeed[index] for index, _ in sorted_lst[:numValue]]
-    
-    return value_of_smallest
+    def getBestValue(self,numBest):
+        sorted_lst = sorted(self.container, key=lambda x: x[0])
+        value_of_smallest = [value[1] for value in sorted_lst[:numBest]]
+        return value_of_smallest
 
 if __name__ == "__main__":
-    normalizeRatio = 250
+    
 
     X_train = []
     y_train = []
 
     expectChart = getExpectChart()
+    dtwObj = DTW()
 
     addX = np.random.rand(16,11)
     for eachX in addX:
@@ -101,38 +99,53 @@ if __name__ == "__main__":
     X_train_np = np.array(X_train)
     y_train_np = np.array(y_train)
 
-    model = create_model()
-    train_model(model, X_train_np, y_train_np/normalizeRatio)
-
+    train_model(dtwObj.model, X_train_np, y_train_np/normalizeRatio)
     counter = 0
-    bestSeedIdx = np.argmin(np.mean((y_train_np-expectChart)**2,1))
-    bestSeed = X_train[bestSeedIdx]
-    oldMSE = np.mean((y_train_np[bestSeedIdx]-expectChart)**2)
+
+    pbounds = {'x1': (0, 1), 'x2': (0, 1), 'x3': (0, 1), 'x4': (0, 1), 'x5': (0, 1),
+    'x6': (0, 1), 'x7': (0, 1), 'x8': (0, 1), 'x9': (0, 1), 'x10': (0, 1), 'x11': (0, 1)
+    }
+
+    optimizer = BayesianOptimization(
+        f=dtwObj.objective_function,
+        pbounds=pbounds,
+        random_state=1,
+        allow_duplicate_points=True
+    )
 
     while 1:
         counter += 1
-        randomSeed = generateSeed(bestSeed)
-        predictions = predict(model, randomSeed)
-        predictions = np.array(predictions)*normalizeRatio
 
-        nexVal = getBestValue(predictions,randomSeed,16)
+        
+
+        # Thực hiện quá trình tối ưu hóa
+        optimizer.maximize(
+            init_points=10,  # Số lượng điểm khởi tạo ngẫu nhiên
+            n_iter=500      # Số lần lặp tối ưu hóa
+        )
+
+        # In kết quả tối ưu
+        print("optimizer.max : ",optimizer.max)
+
+        nexVal = dtwObj.getBestValue(16)
         for eachVal in nexVal:
             X_train.append(eachVal)
         simulationResult = run_simulation(nexVal)
         for idx, eachResult in enumerate(simulationResult):
             y_train.append(eachResult)
 
-            currentMSE = np.mean((eachResult-expectChart)**2)
-            if currentMSE < oldMSE:
-                oldMSE = currentMSE
-                bestSeed = nexVal[idx]
+        print(counter," time: Predic MSE:",optimizer.max["params"])
+        expectChart = getExpectChart()
+        MSEcollector = np.mean((simulationResult-expectChart)**2,1)
+        print("Best MSE: ",np.min(MSEcollector))
 
-        print(counter,"time: real offset is",currentMSE," : Min offset",oldMSE)
+        f = open("bayesLog.txt", "a")
+        for eachMSE in MSEcollector:
+            f.write(str(eachMSE) + " ")
+        f.write(optimizer.max["target"] + "\n")
+        f.close()
 
         X_train_np = np.array(X_train)
         y_train_np = np.array(y_train)
-        model = create_model()
-        train_model(model, X_train_np, y_train_np/normalizeRatio)
-
-        # if counter > 512:
-        #     break
+        dtwObj.model = create_model()
+        train_model(dtwObj.model, X_train_np, y_train_np/normalizeRatio)
