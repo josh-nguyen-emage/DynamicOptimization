@@ -13,11 +13,12 @@ def RunSimulation(idx):
     process.wait()
 
 def RunTool4Atena(idx):
-    if os.path.exists(pathIdx(idx)+'G7-Cyl-Trial-1_NODES_STRAIN.atf'):
-        os.remove(pathIdx(idx)+'G7-Cyl-Trial-1_NODES_STRAIN.atf')
+    if os.path.exists(pathIdx(idx)+'G7-Cyl-Trial-1_NODES_REACTIONS.atf'):
+        os.remove(pathIdx(idx)+'G7-Cyl-Trial-1_NODES_REACTIONS.atf')
         os.remove(pathIdx(idx)+'G7-Cyl-Trial-1_NODES_STRESS.atf')
+        os.remove(pathIdx(idx)+'G7-Cyl-Trial-1_NODES_DISPLACEMENTS.atf')
     cwd = "C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\AtenaPool\\"+str(idx)
-    command = ["C:\\Program Files (x86)\\CervenkaConsulting\\AtenaV5\\AtenaConsole.exe", "H:\\02.Working-Thinh\\ATENA-WORKING\\Post.atn"]
+    command = ["C:\\Program Files (x86)\\CervenkaConsulting\\AtenaV5\\AtenaConsole.exe", "C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\Post_Exp1.atn"]
     process = subprocess.Popen(command, cwd=cwd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
     process.wait()
 
@@ -39,7 +40,7 @@ def read_integers_from_file(txt_path):
     
     return integers_array
 
-def extractFile(nodeList,fileName,idx):
+def extractFile(nodeList,fileName,idx, columnIdx):
     # Open the file in read mode
     dataExtracted = []
 
@@ -51,7 +52,7 @@ def extractFile(nodeList,fileName,idx):
             filtered_list = [string for string in currentLine if len(string) != 0]
             try:
                 if (int(filtered_list[0]) in nodeList):
-                    currentSum += float(filtered_list[2])
+                    currentSum += float(filtered_list[columnIdx])
                     
             except:
                 pass    
@@ -62,17 +63,17 @@ def extractFile(nodeList,fileName,idx):
 
 
 def ExtractResult(idx):
-    nodeList = read_integers_from_file(pathName+'NodeList_Mid.txt')
-    nodeCenter = read_integers_from_file(pathName+'NodeCenter.txt')
-    strainVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_DISPLACEMENTS.atf",idx)
-    stressVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_STRESS.atf",idx)
-    midStrainVal = extractFile(nodeCenter,"G7-Cyl-Trial-1_NODES_REACTIONS.atf",idx)
-    return [-1000*np.array(strainVal)[1:51], -1*np.array(stressVal)[1:51], np.array(midStrainVal)[1:51]]
+    nodeList = read_integers_from_file("C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\NodeList_Mid.txt")
+    nodeCenter = read_integers_from_file("C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\NodeList_bodyOpen.txt")
+    strainVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_DISPLACEMENTS.atf",idx,2)
+    stressVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_STRESS.atf",idx,2)
+    midStrainVal = extractFile(nodeCenter,"G7-Cyl-Trial-1_NODES_DISPLACEMENTS.atf",idx,2)
+    return [1000*1000*np.array(strainVal)[0:51]/150, -1*np.array(stressVal)[0:51], -1000*np.array(midStrainVal)[0:51]/0.3]
 
 def RunSimulationThread(idx, inputData):
-    WriteParameter(inputData,idx)
-    RunSimulation(idx)
-    RunTool4Atena(idx)
+    # WriteParameter(inputData,idx)
+    # RunSimulation(idx)
+    # RunTool4Atena(idx)
     outputData = ExtractResult(idx)
     save_to_file(inputData,outputData,"C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\Log_Run_B_A_Phase1.txt")
     return outputData
