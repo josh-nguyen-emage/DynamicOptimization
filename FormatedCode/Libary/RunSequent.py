@@ -67,8 +67,8 @@ def ExtractResult(idx):
     nodeCenter = read_integers_from_file("C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\NodeList_bodyOpen.txt")
     strainVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_DISPLACEMENTS.atf",idx,2)
     stressVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_STRESS.atf",idx,2)
-    midStrainVal = extractFile(nodeCenter,"G7-Cyl-Trial-1_NODES_DISPLACEMENTS.atf",idx,2)
-    return [1000*1000*np.array(strainVal)[0:51]/150, -1*np.array(stressVal)[0:51], -1000*np.array(midStrainVal)[0:51]/0.3]
+    midStrainVal = extractFile(nodeCenter,"G7-Cyl-Trial-1_NODES_DISPLACEMENTS.atf",idx,1)
+    return [1000*1000*np.array(strainVal)[0:51]/150, -1*np.array(stressVal)[0:51], 1000*1000*np.array(midStrainVal)[0:51]]
 
 def RunSimulationThread(idx, inputData):
     # WriteParameter(inputData,idx)

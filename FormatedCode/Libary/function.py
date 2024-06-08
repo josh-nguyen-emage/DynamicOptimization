@@ -34,7 +34,8 @@ def ReadLabFile(filename):
 
 filename = 'C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
 list_a, list_b, list_c = ReadLabFile(filename)
-list_c = np.array(list_c)*(-1000)
+list_c = np.array(list_c)*(1000)
+list_b = np.array(list_b)*(1000)
 list_a = np.array(list_a)
 
 stress_exp = list_a
@@ -148,11 +149,11 @@ def findF(stress_run ,bodyOpen_run, strain_run):
     global strain_exp
     global stress_exp
 
-    stress_perdict_exp_strain = interpolate_line(stress_run, strain_run,strain_exp)
+    stress_perdict_exp_strain = interpolate_line(strain_run, stress_run,strain_exp)
     stress_perdict_exp_strain[0] = stress_exp[0]
     sumSquare1 = (stress_perdict_exp_strain-stress_exp)**2
 
-    stress_perdict_exp_bodyOpen = interpolate_line(stress_run, bodyOpen_run,bodyOpen_exp)
+    stress_perdict_exp_bodyOpen = interpolate_line(bodyOpen_run, stress_run,bodyOpen_exp)
     stress_perdict_exp_bodyOpen[0] = stress_exp[0]
     sumSquare2 = (stress_perdict_exp_bodyOpen-stress_exp)**2
 
@@ -160,4 +161,4 @@ def findF(stress_run ,bodyOpen_run, strain_run):
 
 def getExpectChart():
     global stress_exp
-    return np.concatenate(np.flip(stress_exp),stress_exp)
+    return np.concatenate((np.flip(stress_exp),stress_exp))
