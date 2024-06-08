@@ -47,7 +47,7 @@ def findF(predictY, predictZ):
 
 
 
-filename = 'stdFile\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
+filename = 'G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
 list_a, list_b, list_c = ReadLabFile(filename)
 list_c = np.array(list_c)*(-1000)
 list_a = np.array(list_a)*1
@@ -299,13 +299,19 @@ def drawNelder():
 
 def drawAll():
     plt.figure(figsize=(6, 4))
-    methodList = ['Nelder-Mead', 'Powell', 'CG', 'TNC', 'SLSQP', 'trust-constr']
+    # methodList = ['Nelder-Mead', 'Powell', 'CG', 'TNC', 'SLSQP', 'trust-constr']
+    methodList = ['Nelder-Mead', 'Bayes']
     for eachMethod in methodList:
 
-        X, Y, Z = read_file("Log_Run_F_"+eachMethod+".txt")
+        X, Y, Z = read_file("D:\\1 - Study\\6 - DTW_project\\oldThings\\Log_Run_F_"+eachMethod+".txt")
         # X, Y, Z = read_file("RunLog\Log_Run_G_Phase1.txt")
-        Z = Z[:,1:52]
-        Z *= -1
+        if eachMethod == "Nelder-Mead":
+            Z = Z[:,1:52]
+            Z *= -1
+        
+        # elif eachMethod == "Bayes":
+            # Z = Z[:,1:52]
+            # Z *= -1
 
         fList = []
 
@@ -313,7 +319,7 @@ def drawAll():
             F_value, interpolateValue = findF(Y[index],Z[index])
             fList.append(F_value)
 
-        fList = np.clip(fList,0,50)
+        # fList = np.clip(fList,0,500)
 
         fList = fList[:250]
         color = next(plt.gca()._get_lines.prop_cycler)['color']
@@ -326,14 +332,14 @@ def drawAll():
     plt.xlabel('Run times', fontsize=14)
     plt.ylabel('MSE', fontsize=14)
 
-    ax = plt.gca()
-    ax.tick_params(which='major', length=5, width=2, colors='black', labelsize=14, direction='in')
-    ax.tick_params(which='minor', length=2, width=1, colors='black', direction='in')
+    # ax = plt.gca()
+    # ax.tick_params(which='major', length=5, width=2, colors='black', labelsize=14, direction='in')
+    # ax.tick_params(which='minor', length=2, width=1, colors='black', direction='in')
 
-    ax.xaxis.set_major_locator(ticker.MultipleLocator(50))
-    ax.yaxis.set_major_locator(ticker.MultipleLocator(10))
-    ax.xaxis.set_minor_locator(ticker.MultipleLocator(10))
-    ax.yaxis.set_minor_locator(ticker.MultipleLocator(2))
+    # ax.xaxis.set_major_locator(ticker.MultipleLocator(50))
+    # ax.yaxis.set_major_locator(ticker.MultipleLocator(10))
+    # ax.xaxis.set_minor_locator(ticker.MultipleLocator(10))
+    # ax.yaxis.set_minor_locator(ticker.MultipleLocator(2))
 
     # ax.xaxis.set_major_locator(ticker.MultipleLocator(10))
     # ax.yaxis.set_major_locator(ticker.MultipleLocator(0.5))
@@ -342,7 +348,7 @@ def drawAll():
 
     plt.tight_layout()
 
-    ax.grid(which='major', linestyle='--')
+    # ax.grid(which='major', linestyle='--')
     plt.legend()
 
     plt.title("")
@@ -350,7 +356,7 @@ def drawAll():
     plt.show()
 
 if __name__ == "__main__":
-    # drawAll()
+    drawAll()
     # drawP1()
     # drawInterpolateStep()
-    draw1()
+    # draw1()

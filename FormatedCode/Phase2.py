@@ -12,20 +12,18 @@ class DTW:
 
     def objective_function(self,params):
         params = np.clip(params,0,1)
-        WriteParameter(params, self.index)
-        RunSimulation(self.index)
-        RunTool4Atena(self.index)
-        outputData = ExtractResult(self.index)
-        # save_to_file(params,outputData,"Log_Run_F_"+self.method+".txt")
-        strain = outputData[0]
-        stress = outputData[1]
-        MSE = findF(strain,stress)
+        simulation_result = RunSimulationThread(self.index, params)
+        strain = simulation_result[0]
+        stress = simulation_result[1]
+        bodyOpen = simulation_result[2]
+        MSE, interpolate = findF(stress, bodyOpen, strain)
+        save_to_file(params,simulation_result,"Run_A_"+self.method+".txt")
         print("curent MSE of",self.method,":",MSE)
         return MSE
 
 def RunAlgo(index):
     initParam = [0.5]*11
-    methodList = ['Nelder-Mead', 'Powell', 'CG', 'BFGS', 'L-BFGS-B', 'TNC', 'COBYLA', 'SLSQP', 'trust-constr']
+    methodList = ['Nelder-Mead', 'Powell', 'CG', 'BFGS', 'TNC']
     dtw = DTW(methodList[index],index)
     bounds = [(0, 1)] * 11
     result = minimize(dtw.objective_function, initParam, method=methodList[index], bounds=bounds)
@@ -34,7 +32,7 @@ def RunAlgo(index):
 if __name__ == "__main__":
 
     timeColector = []
-    numThread = 9
+    numThread = 5
 
 
     # Create a list to hold the thread objects
