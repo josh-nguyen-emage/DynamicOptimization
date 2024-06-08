@@ -31,8 +31,11 @@ def ReadLabFile(filename):
                 print(f"Ignoring line: {line.strip()}. Could not convert values to floats.")
 
     return list_a, list_b, list_c
+if os.path.exists("C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile"):
+    filename = 'C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
+else:
+    filename = "D:\\1 - Study\\6 - DTW_project\\Container\\stdFile\\G7-Uni-AxialTest.dat"
 
-filename = 'C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
 list_a, list_b, list_c = ReadLabFile(filename)
 list_c = np.array(list_c)*(1000)
 list_b = np.array(list_b)*(1000)
