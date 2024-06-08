@@ -27,19 +27,17 @@ def predict(model, X_test):
 
 def runSingleSimulation(params):
     params = np.clip(params, 0, 1)
-    simulation_result = RunSimulationThread(0, params)
-    strain = simulation_result[0]
-    stress = simulation_result[1]
-    bodyOpen = simulation_result[2]
-    MSE, interpolate = findF(stress, bodyOpen, strain)
+    simulationResult = RunSimulationThread(0, params)
+    strain = simulationResult[0]
+    stress = simulationResult[1]
+    MSE, interpolate = findF(strain,stress)
     return np.array(interpolate)
 
 def run_simulation_thread(paramIdx, param, resultInterpolate):
     simulation_result = RunSimulationThread(paramIdx, param)
     strain = simulation_result[0]
     stress = simulation_result[1]
-    bodyOpen = simulation_result[2]
-    MSE, interpolate = findF(stress, bodyOpen, strain)
+    MSE, interpolate = findF(strain, stress)
     resultInterpolate[paramIdx] = interpolate
 
 def run_simulation(params):

@@ -63,9 +63,11 @@ def extractFile(nodeList,fileName,idx):
 
 def ExtractResult(idx):
     nodeList = read_integers_from_file(pathName+'NodeList_Mid.txt')
-    strainVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_STRAIN.atf",idx)
+    nodeCenter = read_integers_from_file(pathName+'NodeCenter.txt')
+    strainVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_DISPLACEMENTS.atf",idx)
     stressVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_STRESS.atf",idx)
-    return [-1000*np.array(strainVal)[1:51], -1*np.array(stressVal)[1:51]]
+    midStrainVal = extractFile(nodeCenter,"G7-Cyl-Trial-1_NODES_REACTIONS.atf",idx)
+    return [-1000*np.array(strainVal)[1:51], -1*np.array(stressVal)[1:51], np.array(midStrainVal)[1:51]]
 
 def RunSimulationThread(idx, inputData):
     WriteParameter(inputData,idx)

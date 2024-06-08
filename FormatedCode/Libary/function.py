@@ -32,13 +32,15 @@ def ReadLabFile(filename):
 
     return list_a, list_b, list_c
 
-filename = 'C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\stdFile\\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
+filename = 'C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
 list_a, list_b, list_c = ReadLabFile(filename)
 list_c = np.array(list_c)*(-1000)
 list_a = np.array(list_a)
 
-Y_exp = list_c
-Z_exp = list_a
+stress_exp = list_a
+bodyOpen_exp = list_b
+strain_exp = list_c
+
 
 def read_file(filename):
     with open(filename, 'r') as file:
@@ -62,6 +64,7 @@ def read_file(filename):
 def save_to_file(inputs, outputs, filename):
     strainVal = outputs[0]
     stressVal = outputs[1]
+    # stressVal = outputs[1]
     with open(filename, 'a') as file:
         inStr = [str(num) for num in inputs]
         outStrain = [str(num) for num in strainVal]
@@ -141,16 +144,20 @@ def interpolate_line(x_values, y_values, X_interpolate):
 
     return Y_interpolate
 
-def findF(predictY, predictZ):
-    global Y_exp
-    global Z_exp
+def findF(stress_run ,bodyOpen_run, strain_run):
+    global strain_exp
+    global stress_exp
 
-    Z_perdict_expBase = interpolate_line(predictY, predictZ,Y_exp)
-    Z_perdict_expBase[0] = Z_exp[0]
-    sumSquare = (Z_perdict_expBase-Z_exp)**2
+    stress_perdict_exp_strain = interpolate_line(stress_run, strain_run,strain_exp)
+    stress_perdict_exp_strain[0] = stress_exp[0]
+    sumSquare1 = (stress_perdict_exp_strain-stress_exp)**2
 
-    return np.nanmean(sumSquare), Z_perdict_expBase
+    stress_perdict_exp_bodyOpen = interpolate_line(stress_run, bodyOpen_run,bodyOpen_exp)
+    stress_perdict_exp_bodyOpen[0] = stress_exp[0]
+    sumSquare2 = (stress_perdict_exp_bodyOpen-stress_exp)**2
+
+    return (np.nanmean(sumSquare1)+np.nanmean(sumSquare2))/2, np.concatenate((np.flip(stress_perdict_exp_strain), stress_perdict_exp_bodyOpen))
 
 def getExpectChart():
-    global Z_exp
-    return Z_exp
+    global stress_exp
+    return np.concatenate(np.flip(stress_exp),stress_exp)
