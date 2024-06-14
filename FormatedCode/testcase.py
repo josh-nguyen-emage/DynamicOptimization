@@ -2,11 +2,13 @@ from Phase1 import *
 import numpy as np
 import matplotlib.pyplot as plt
 
-returnVal = RunSimulationThread(0,np.random.rand(11))
+# returnVal = RunSimulationThread(0,np.random.rand(11))
+returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\Log_Run_Burning_1.txt")
 # print(returnVal)
-strain = returnVal[0]
-stress = returnVal[1]
-bodyOpen = returnVal[2]
+param = returnVal[0][0]
+strain = returnVal[1][0]
+stress = returnVal[2][0]
+bodyOpen = returnVal[3][0]
 MSE, interpolate = findF(stress, bodyOpen, strain)
 
 print(MSE)
