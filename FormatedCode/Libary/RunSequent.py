@@ -68,12 +68,12 @@ def ExtractResult(idx):
     strainVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_DISPLACEMENTS.atf",idx,2)
     stressVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_STRESS.atf",idx,2)
     midStrainVal = extractFile(nodeCenter,"G7-Cyl-Trial-1_NODES_DISPLACEMENTS.atf",idx,1)
-    return [1000*1000*np.array(strainVal)[0:51]/150, -1*np.array(stressVal)[0:51], 1000*1000*np.array(midStrainVal)[0:51]]
+    return [1000*1000*np.array(strainVal)[0:51]/150, -1*np.array(stressVal)[0:51], 1000*np.array(midStrainVal)[0:51]/0.075]
 
 def RunSimulationThread(idx, inputData):
-    # WriteParameter(inputData,idx)
-    # RunSimulation(idx)
-    # RunTool4Atena(idx)
+    WriteParameter(inputData,idx)
+    RunSimulation(idx)
+    RunTool4Atena(idx)
     outputData = ExtractResult(idx)
     save_to_file(inputData,outputData,"C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\Log_Run_B_A_Phase1.txt")
     return outputData
