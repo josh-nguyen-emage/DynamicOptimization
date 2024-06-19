@@ -51,16 +51,19 @@ def read_file(filename):
         first_values = []
         secondValue = []
         last_values = []
+        last_values2 = []
         for line in file:
             # Split the line by colon ":"
             parts = line.strip().split(':')
-            if len(parts) == 3:
+            if len(parts) == 4:
                 first_values.append(list(map(float, parts[0].split())))
                 secondValue.append(list(map(float, parts[1].split())))
                 last_values.append(list(map(float, parts[2].split())))
+                last_values2.append(list(map(float, parts[3].split())))
             else:
                 print("Invalid line:")
-    return np.array(first_values), np.array(secondValue),np.array(last_values)
+            # break
+    return np.array(first_values), np.array(secondValue),np.array(last_values),np.array(last_values2)
 
 
 
@@ -141,7 +144,30 @@ def calculate_covariance(list1, list2):
     covariance = covariance_matrix[0, 1]  # Covariance is the off-diagonal element of the covariance matrix
     return covariance
 
+def remove_duplicates(x, y):
+    # Ensure both lists have the same length
+    if len(x) != len(y):
+        raise ValueError("Both lists must have the same length.")
+    
+    # Create sets to identify duplicates
+    x_set = set()
+    y_set = set()
+    
+    # Find indices of duplicates
+    x_duplicates = {i for i, val in enumerate(x) if val in x_set or x_set.add(val)}
+    y_duplicates = {i for i, val in enumerate(y) if val in y_set or y_set.add(val)}
+    
+    # Combine indices of all duplicates
+    all_duplicates = x_duplicates.union(y_duplicates)
+    
+    # Remove elements at duplicate indices from both lists
+    new_x = [val for i, val in enumerate(x) if i not in all_duplicates]
+    new_y = [val for i, val in enumerate(y) if i not in all_duplicates]
+    
+    return new_x, new_y
+
 def interpolate_line(x_values, y_values, X_interpolate):
+    x_values, y_values = remove_duplicates(x_values, y_values)
     interp_func = interp1d(x_values, y_values, kind='cubic', bounds_error=False)
 
     Y_interpolate = interp_func(X_interpolate)
