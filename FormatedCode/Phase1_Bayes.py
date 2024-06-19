@@ -14,7 +14,7 @@ def create_model():
         layers.Dense(128, activation='relu'),
         layers.Dense(256, activation='relu'),
         layers.Dense(128, activation='relu'),
-        layers.Dense(75, activation='sigmoid')
+        layers.Dense(150, activation='sigmoid')
     ])
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     return model
@@ -40,6 +40,8 @@ def run_simulation_thread(paramIdx, param, resultInterpolate):
     stress = simulation_result[1]
     bodyOpen = simulation_result[2]
     MSE, interpolate = findF(stress, bodyOpen, strain)
+    if np.isnan(MSE):
+        raise ValueError("MSE is nan")
     resultInterpolate[paramIdx] = interpolate
 
 def run_simulation(params):
@@ -65,14 +67,16 @@ class DTW:
         self.model = create_model()
         self.container = []
 
-    def objective_function(self,params):
+    def objective_function(self,x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11):
+        params = [x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11]
         params = np.clip(params,0,1)
-        predictVal = self.model.predict([params], verbose=0)
-        predictVal = np.array(predictVal)*normalizeRatio
+        params = np.array(params).reshape(1, -1)  # Reshape to (1, 11)
+        predictVal = self.model.predict(params, verbose=0)
+        predictVal = np.array(predictVal[0])*normalizeRatio
         expectChart = getExpectChart()
         MSE = np.nanmean((predictVal-expectChart)**2)
-        self.container.append([MSE,params])
-        return MSE
+        self.container.append([MSE,[x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11]])
+        return -1*MSE
     
     def getBestValue(self,numBest):
         sorted_lst = sorted(self.container, key=lambda x: x[0])
@@ -106,26 +110,27 @@ if __name__ == "__main__":
     'x6': (0, 1), 'x7': (0, 1), 'x8': (0, 1), 'x9': (0, 1), 'x10': (0, 1), 'x11': (0, 1)
     }
 
-    optimizer = BayesianOptimization(
-        f=dtwObj.objective_function,
-        pbounds=pbounds,
-        random_state=1,
-        allow_duplicate_points=True
-    )
+    
 
     while 1:
         counter += 1
 
+        optimizer = BayesianOptimization(
+                f=dtwObj.objective_function,
+                pbounds=pbounds,
+                random_state=1,
+                allow_duplicate_points=True
+            )
         
-
+        dtwObj.container = []
         # Thực hiện quá trình tối ưu hóa
         optimizer.maximize(
             init_points=10,  # Số lượng điểm khởi tạo ngẫu nhiên
-            n_iter=500      # Số lần lặp tối ưu hóa
+            n_iter=300      # Số lần lặp tối ưu hóa
         )
 
         # In kết quả tối ưu
-        print("optimizer.max : ",optimizer.max)
+        # print("optimizer.max : ",optimizer.max)
 
         nexVal = dtwObj.getBestValue(16)
         for eachVal in nexVal:
@@ -136,13 +141,13 @@ if __name__ == "__main__":
 
         print(counter," time: Predic MSE:",optimizer.max["params"])
         expectChart = getExpectChart()
-        MSEcollector = np.mean((simulationResult-expectChart)**2,1)
+        MSEcollector = np.nanmean((simulationResult-expectChart)**2,1)
         print("Best MSE: ",np.min(MSEcollector))
 
         f = open("bayesLog.txt", "a")
         for eachMSE in MSEcollector:
             f.write(str(eachMSE) + " ")
-        f.write(optimizer.max["target"] + "\n")
+        f.write(str(-1*optimizer.max["target"]) + "\n")
         f.close()
 
         X_train_np = np.array(X_train)
