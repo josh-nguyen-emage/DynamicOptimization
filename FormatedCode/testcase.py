@@ -9,7 +9,18 @@ if __name__ == "__main__":
     bodyOpen = returnVal[2]
     MSE, interpolate = findF(stress, bodyOpen, strain)
 
+<<<<<<< HEAD
+# returnVal = RunSimulationThread(0,np.random.rand(11))
+returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\Log_Run_Burning_1.txt")
+# print(returnVal)
+param = returnVal[0][0]
+strain = returnVal[1][0]
+stress = returnVal[2][0]
+bodyOpen = returnVal[3][0]
+MSE, interpolate = findF(stress, bodyOpen, strain)
+=======
     print(MSE)
+>>>>>>> 013ef76cfdf90fba71ad9a82f2b026d888d0cf4b
 
     plt.plot(np.concatenate((np.flip(strain),bodyOpen)) , np.concatenate((np.flip(stress),stress)), label = "Simulation")
     # plt.plot(np.concatenate((np.flip(strain_exp),bodyOpen_exp)) , interpolate, marker = "x", label = "Interpolate")
