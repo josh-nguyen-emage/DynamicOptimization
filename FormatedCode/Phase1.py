@@ -1,11 +1,12 @@
 import sys, os
 import threading
 
-from Libary.RunSequent import RunSimulationThread
 sys.path.append(os.path.abspath(os.path.join('.')))
 import numpy as np
 from keras import layers, models
 
+
+from Libary.RunSequent import RunSimulationThread
 from Libary.function import *
 
 def create_model():

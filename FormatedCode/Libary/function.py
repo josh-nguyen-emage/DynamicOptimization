@@ -71,12 +71,13 @@ def read_file(filename):
 def save_to_file(inputs, outputs, filename):
     strainVal = outputs[0]
     stressVal = outputs[1]
-    # stressVal = outputs[1]
+    bodyOpen = outputs[2]
+    inStr = [str(num) for num in inputs]
+    outStrain = [str(num) for num in strainVal]
+    outStress = [str(num) for num in stressVal]
+    outbodyOpen = [str(num) for num in bodyOpen]
     with open(filename, 'a') as file:
-        inStr = [str(num) for num in inputs]
-        outStrain = [str(num) for num in strainVal]
-        outStress = [str(num) for num in stressVal]
-        file.write(' '.join(inStr)+" : "+' '.join(outStrain)+" : "+' '.join(outStress)+"\n")
+        file.write(' '.join(inStr)+" : "+' '.join(outStrain)+" : "+' '.join(outStress)+" : "+' '.join(outbodyOpen)+"\n")
         
 
 def WriteParameter(data,idx):
@@ -185,8 +186,13 @@ def findF(stress_run ,bodyOpen_run, strain_run):
     stress_perdict_exp_bodyOpen = interpolate_line(bodyOpen_run, stress_run,bodyOpen_exp)
     stress_perdict_exp_bodyOpen[0] = stress_exp[0]
     sumSquare2 = (stress_perdict_exp_bodyOpen-stress_exp)**2
+    interpolateArray = np.concatenate((np.flip(stress_perdict_exp_strain), stress_perdict_exp_bodyOpen))
+    interpolateArray[np.isnan(interpolateArray)] = 250
 
-    return (np.nanmean(sumSquare1)+np.nanmean(sumSquare2))/2, np.concatenate((np.flip(stress_perdict_exp_strain), stress_perdict_exp_bodyOpen))
+    if len(interpolateArray) != 150:
+        raise ValueError("interpolateArray len is not correct")
+
+    return (np.nanmean(sumSquare1)+np.nanmean(sumSquare2))/2, interpolateArray
 
 def getExpectChart():
     global stress_exp
