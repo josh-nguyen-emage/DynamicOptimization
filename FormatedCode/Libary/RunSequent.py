@@ -1,7 +1,7 @@
-import os
+import os, sys
 import time
 import subprocess
-
+sys.path.append(os.path.abspath(os.path.join('.')))
 import numpy as np
 
 from Libary.function import *
