@@ -18,34 +18,49 @@ def save_lists_to_file(list1, list2, filename):
             file.write(f"{item}\n")
 
 
-returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\Log_Run_Burning_1.txt")
+returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\Log_Run_Burning_A_1.txt")
 
 param = returnVal[0]
 strain = np.array(returnVal[1])/(-4)
 stress = np.array(returnVal[2])/(300)
 bodyOpen = np.array(returnVal[3])/(20)
 
-TrainVal = np.concatenate((strain, stress, bodyOpen),axis=1)
+TrainVal = [[ai, bi, ci] for ai, bi, ci in zip(strain, stress, bodyOpen)]
 
-split_index = 8096
+TrainVal = np.array(TrainVal)
 
-X_train, X_test = param[:split_index], param[split_index:]
-y_train, y_test = TrainVal[:split_index], TrainVal[split_index:]
-
-model = load_model('last.h5')
+model = load_model('Model/last.h5')
 
 predictions = model.predict(np.array(param,dtype="float32"))
 
 for i in range(10):
-    index = -1*i
-    plt.plot(predictions[index][:51]*(-4),predictions[index][51:102]*(300), label='Predict Line', color="red")
-    plt.plot(predictions[index][102:]*(20),predictions[index][51:102]*(300), color="red")
+    index = 5+i
+    plt.plot(predictions[index][0]*(-4),predictions[index][1]*(300), label='Predict Line', color="red")
+    plt.plot(predictions[index][2]*(20),predictions[index][1]*(300), color="red")
     
-    plt.plot(TrainVal[index][:51]*(-4),TrainVal[index][51:102]*(300), label='Simulation Line', color="blue")
-    plt.plot(TrainVal[index][102:]*(20),TrainVal[index][51:102]*(300), color="blue")
+    plt.plot(TrainVal[index][0]*(-4),TrainVal[index][1]*(300), label='Simulation Line', color="blue")
+    plt.plot(TrainVal[index][2]*(20),TrainVal[index][1]*(300), color="blue")
 
-    plt.xlabel('Strain')
-    plt.ylabel('Stress')
-    plt.title('Predict - Simulation compare')
+    # plt.title('Predict - Simulation compare')
     plt.legend()
     plt.show()
+
+# for i in range(10):
+#     index = 8096+i
+#     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 6))
+    
+#     ax1.plot(TrainVal[index][:51]*(-4),TrainVal[index][51:102]*(300), label='Simulation Line', color="blue")
+#     ax1.plot(TrainVal[index][102:]*(20),TrainVal[index][51:102]*(300), color="blue")
+
+#     ax2.plot((TrainVal[index][:51]*(-4)),((TrainVal[index][102:]*(20)/TrainVal[index][:51]*(-4))), label='Predict Line', color="red")
+
+#     ax1.set_xlabel('Strain')
+#     ax1.set_ylabel('Stress')
+#     ax1.set_title("Simulation")
+
+#     ax2.set_xlabel('Strain')
+#     ax2.set_ylabel('Strain + /Strain -')
+#     ax1.set_title("V plot")
+#     # plt.title('Predict - Simulation compare')
+#     plt.legend()
+#     plt.show()

@@ -17,7 +17,7 @@ def save_lists_to_file(list1, list2, filename):
             file.write(f"{item}\n")
 
 
-returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\Log_Run_Burning_1.txt")
+returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\Log_Run_Burning_2.txt")
 
 param = returnVal[0]
 strain = np.array(returnVal[1])/(-4)
@@ -26,7 +26,7 @@ bodyOpen = np.array(returnVal[3])/(20)
 
 TrainVal = np.concatenate((strain, stress, bodyOpen),axis=1)
 
-split_index = 8096
+split_index = 17920
 
 X_train, X_test = param[:split_index], param[split_index:]
 y_train, y_test = TrainVal[:split_index], TrainVal[split_index:]
