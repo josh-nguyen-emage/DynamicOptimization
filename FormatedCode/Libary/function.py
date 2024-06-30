@@ -61,6 +61,7 @@ def read_file(filename):
                 last_values.append(list(map(float, parts[2].split())))
                 last_values2.append(list(map(float, parts[3].split())))
             else:
+                print(len(last_values))
                 print("Invalid line:")
             # break
     return np.array(first_values), np.array(secondValue),np.array(last_values),np.array(last_values2)
@@ -178,6 +179,7 @@ def interpolate_line(x_values, y_values, X_interpolate):
 def findF(stress_run ,bodyOpen_run, strain_run):
     global strain_exp
     global stress_exp
+    global bodyOpen_exp
 
     stress_perdict_exp_strain = interpolate_line(strain_run, stress_run,strain_exp)
     stress_perdict_exp_strain[0] = stress_exp[0]
@@ -193,8 +195,9 @@ def findF(stress_run ,bodyOpen_run, strain_run):
         raise ValueError("interpolateArray len is not correct")
 
     # return (np.nanmean(sumSquare1)+np.nanmean(sumSquare2))/2, interpolateArray
-    return np.nanmean(sumSquare1), stress_perdict_exp_strain
+    return np.nanmean(sumSquare1), interpolateArray
 
 def getExpectChart():
-    # return np.concatenate((np.flip(stress_exp),bodyOpen_exp))
-    return stress_exp
+    global stress_exp
+    global bodyOpen_exp
+    return np.concatenate((np.flip(stress_exp),bodyOpen_exp))
