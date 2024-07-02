@@ -14,7 +14,6 @@ stress = np.array(returnVal[2])/(300)
 bodyOpen = np.array(returnVal[3])/(20)
 
 TrainVal = [[ai, bi, ci] for ai, bi, ci in zip(strain, stress, bodyOpen)]
-
 TrainVal = np.array(TrainVal)
 
 for i in range(10):
@@ -24,14 +23,14 @@ for i in range(10):
     ax1.plot(TrainVal[index][0]*(-4),TrainVal[index][1]*(300), label='Simulation Line', color="blue")
     ax1.plot(TrainVal[index][2]*(20),TrainVal[index][1]*(300), color="blue")
 
-    ax2.plot(TrainVal[index][0]*(-4),(((TrainVal[index][2]*(20))/(TrainVal[index][0]*(-4)))), label='Predict Line', color="red")
+    ax2.plot(TrainVal[index][1]*(300),(((TrainVal[index][2]*(20))/(TrainVal[index][0]*(4)))), label='Predict Line', color="red")
 
     ax1.set_xlabel('Strain')
     ax1.set_ylabel('Stress')
     ax1.set_title("Simulation")
 
-    ax2.set_xlabel('Strain')
-    ax2.set_ylabel('Strain + /Strain -')
+    # ax2.set_xlabel('Strain')
+    # ax2.set_ylabel('Strain + /Strain -')
     ax1.set_title("V plot")
     print(TrainVal[index][0][:10]*(-4))
     print(TrainVal[index][2][:10]*(20))
