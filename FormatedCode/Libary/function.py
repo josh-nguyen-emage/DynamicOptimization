@@ -189,15 +189,15 @@ def findF(stress_run ,bodyOpen_run, strain_run):
     stress_perdict_exp_bodyOpen[0] = stress_exp[0]
     sumSquare2 = (stress_perdict_exp_bodyOpen-stress_exp)**2
     interpolateArray = np.concatenate((np.flip(stress_perdict_exp_strain), stress_perdict_exp_bodyOpen))
-    interpolateArray[np.isnan(interpolateArray)] = 250
+    interpolateArray[np.isnan(interpolateArray)] = 300
 
     if len(interpolateArray) != 150:
         raise ValueError("interpolateArray len is not correct")
 
-    # return (np.nanmean(sumSquare1)+np.nanmean(sumSquare2))/2, interpolateArray
-    return np.nanmean(sumSquare1), interpolateArray
+    return (np.nanmean(sumSquare1)+np.nanmean(sumSquare2))/2, interpolateArray
+    # return np.nanmean(sumSquare1), interpolateArray
 
 def getExpectChart():
     global stress_exp
     global bodyOpen_exp
-    return np.concatenate((np.flip(stress_exp),bodyOpen_exp))
+    return np.concatenate((np.flip(stress_exp),stress_exp))
