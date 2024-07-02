@@ -75,5 +75,5 @@ def RunSimulationThread(idx, inputData):
     RunSimulation(idx)
     RunTool4Atena(idx)
     outputData = ExtractResult(idx)
-    save_to_file(inputData,outputData,"C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\Log_Run_Burning_A_1.txt")
+    save_to_file(inputData,outputData,"C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\Log_Run_Bayes_1-7.txt")
     return outputData
