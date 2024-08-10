@@ -194,7 +194,7 @@ def findF(stress_run ,bodyOpen_run, strain_run):
     if len(interpolateArray) != 150:
         raise ValueError("interpolateArray len is not correct")
 
-    return (np.nanmean(sumSquare1)+np.nanmean(sumSquare2))/2, interpolateArray
+    return (np.nanmean(sumSquare1)*0.8+np.nanmean(sumSquare2)*0.2), interpolateArray
     # return np.nanmean(sumSquare1), interpolateArray
 
 def getExpectChart():
