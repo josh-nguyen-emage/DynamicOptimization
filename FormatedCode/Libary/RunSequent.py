@@ -5,6 +5,7 @@ sys.path.append(os.path.abspath(os.path.join('.')))
 import numpy as np
 
 from Libary.function import *
+from keras.models import load_model
 
 def RunSimulation(idx):
     cwd = "C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\AtenaPool\\"+str(idx)
@@ -75,5 +76,5 @@ def RunSimulationThread(idx, inputData):
     RunSimulation(idx)
     RunTool4Atena(idx)
     outputData = ExtractResult(idx)
-    save_to_file(inputData,outputData,"C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\Log_Run_Bayes_4-7.txt")
+    save_to_file(inputData,outputData,"C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\BurningTest_3dDraw_10-8.txt")
     return outputData

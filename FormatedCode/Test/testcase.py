@@ -1,3 +1,5 @@
+import sys, os
+sys.path.append(os.path.abspath(os.path.join('.')))
 from Phase1 import *
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,7 +12,7 @@ if __name__ == "__main__":
     # MSE, interpolate = findF(stress, bodyOpen, strain)
 
     # returnVal = RunSimulationThread(0,np.random.rand(11))
-    returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\Log_Run_Burning_2.txt")
+    returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\Log_Run_Bayes_1-7.txt")
     # print(returnVal)
     minIdx = 0
     minMSE = 1000000
@@ -36,15 +38,15 @@ if __name__ == "__main__":
     print("idx:",minIdx)
     print("MSE:",MSE)
 
-    plt.plot(np.concatenate((np.flip(strain),bodyOpen)) , np.concatenate((np.flip(stress),stress)), label = "Simulation")
-    plt.plot(np.concatenate((np.flip(strain_exp),bodyOpen_exp)) , interpolate, marker = "x", label = "Interpolate")
-    plt.plot(strain_exp , stress_exp, label = "Experiment",color="green")
-    plt.plot(bodyOpen_exp , stress_exp,color="green")
+    # plt.plot(np.concatenate((np.flip(strain),bodyOpen)) , np.concatenate((np.flip(stress),stress)), label = "Simulation")
+    # plt.plot(np.concatenate((np.flip(strain_exp),bodyOpen_exp)) , interpolate, marker = "x", label = "Interpolate")
+    # plt.plot(strain_exp , stress_exp, label = "Experiment",color="green")
+    # plt.plot(bodyOpen_exp , stress_exp,color="green")
 
     # Add titles and labels
-    # plt.plot(np.array(range(len(container)))/16 , container, label = "MSE", marker = "o", linestyle = '')
-    # min_values = [min(container[:i+1]) for i in range(len(container))]
-    # plt.plot(np.array(range(len(min_values)))/16 , min_values)
+    plt.plot(np.array(range(len(container)))/16 , container, label = "MSE", marker = "o", linestyle = '')
+    min_values = [min(container[:i+1]) for i in range(len(container))]
+    plt.plot(np.array(range(len(min_values)))/16 , min_values)
 
     plt.title('ID:'+str(minIdx) + " MSE:"+str(minMSE))
     plt.xlabel('Run time')
