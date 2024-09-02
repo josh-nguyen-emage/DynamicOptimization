@@ -18,6 +18,9 @@ def RunTool4Atena(idx):
         os.remove(pathIdx(idx)+'G7-Cyl-Trial-1_NODES_REACTIONS.atf')
         os.remove(pathIdx(idx)+'G7-Cyl-Trial-1_NODES_STRESS.atf')
         os.remove(pathIdx(idx)+'G7-Cyl-Trial-1_NODES_DISPLACEMENTS.atf')
+        os.remove(pathIdx(idx)+'a.err')
+        os.remove(pathIdx(idx)+'a.msg')
+        os.remove(pathIdx(idx)+'a.out')
     cwd = "G:\\2.Working-Thinh\\AtenaPool\\"+str(idx)
     command = ["C:\\Program Files (x86)\\CervenkaConsulting\\AtenaV5\\AtenaConsole.exe", "G:\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\Post_Exp1.atn"]
     process = subprocess.Popen(command, cwd=cwd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
