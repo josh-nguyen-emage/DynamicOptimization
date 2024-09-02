@@ -1,6 +1,9 @@
 
 import datetime
 import sys, os
+import re
+import subprocess
+
 
 sys.path.append(os.path.abspath(os.path.join('.')))
 import numpy as np
@@ -88,12 +91,12 @@ def WriteParameter(data,idx):
     C3 = data[2]*70+10
     C4 = data[3]*220+30
     C5 = data[4]*3+1
-    C7 = data[5]*180+20
+    C7 = data[5]*250+20
     C8 = data[6]*16+4
     C10= data[7]*1.2+0.2
     C11= data[8]*0.6+0.1
     C12= data[9]*6000+5000
-    E  = data[10]*13000 + 57000
+    E  = data[10]*20000 + 57000
     writeInpFile(K1,C1,C3,C4,C5,C7,C8,C10,C11,C12, E,idx)
 
 def writeInpFile(
@@ -194,10 +197,35 @@ def findF(stress_run ,bodyOpen_run, strain_run):
     if len(interpolateArray) != 150:
         raise ValueError("interpolateArray len is not correct")
 
-    return (np.nanmean(sumSquare1)+np.nanmean(sumSquare2))/2, interpolateArray
+    return (np.nanmean(sumSquare1)*0.5+np.nanmean(sumSquare2)*0.5), interpolateArray
     # return np.nanmean(sumSquare1), interpolateArray
 
 def getExpectChart():
     global stress_exp
     global bodyOpen_exp
     return np.concatenate((np.flip(stress_exp),stress_exp))
+
+def get_arp_table():
+    try:
+        # Run the arp command to get the ARP table
+        output = subprocess.check_output("getmac", shell=True, text=True)
+        return output
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing arp command: {e}")
+        return None
+
+def check_mac_address(target_mac):
+    arp_table = get_arp_table()
+    if arp_table is None:
+        return False
+
+    # Use regular expression to find MAC addresses in the ARP table
+    mac_regex = re.compile(r"(([0-9A-Fa-f]{1,2}[:-]){5}([0-9A-Fa-f]{1,2}))")
+    matches = mac_regex.findall(arp_table)
+
+    for match in matches:
+        mac = match[0]
+        if mac.lower() == target_mac.lower():
+            return True
+    return False
+
