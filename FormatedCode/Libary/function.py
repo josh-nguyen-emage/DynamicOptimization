@@ -12,7 +12,7 @@ from scipy.interpolate import interp1d
 pathName = "H:\\02.Working-Thinh\\ATENA-WORKING\\"
 
 def pathIdx(idx):
-    return "C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\AtenaPool\\"+str(idx)+"\\"
+    return "G:\\2.Working-Thinh\\AtenaPool\\"+str(idx)+"\\"
 
 def ReadLabFile(filename):
     list_a = []
@@ -34,8 +34,8 @@ def ReadLabFile(filename):
                 print(f"Ignoring line: {line.strip()}. Could not convert values to floats.")
 
     return list_a, list_b, list_c
-if os.path.exists("C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile"):
-    filename = 'C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
+if os.path.exists("G:\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile"):
+    filename = 'G:\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
 else:
     filename = "D:\\1 - Study\\6 - DTW_project\\Container\\stdFile\\G7-Uni-AxialTest.dat"
 
