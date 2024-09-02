@@ -8,7 +8,7 @@ from Libary.function import *
 from keras.models import load_model
 
 def RunSimulation(idx):
-    cwd = "C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\AtenaPool\\"+str(idx)
+    cwd = "G:\\2.Working-Thinh\\AtenaPool\\"+str(idx)
     command = ["C:\\Program Files (x86)\\CervenkaConsulting\\AtenaV5\\AtenaConsole.exe", cwd + "\\G7-Cyl-Trial-1.inp", "a.out", "a.msg", "a.err"]
     process = subprocess.Popen(command, cwd=cwd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
     process.wait()
@@ -18,8 +18,8 @@ def RunTool4Atena(idx):
         os.remove(pathIdx(idx)+'G7-Cyl-Trial-1_NODES_REACTIONS.atf')
         os.remove(pathIdx(idx)+'G7-Cyl-Trial-1_NODES_STRESS.atf')
         os.remove(pathIdx(idx)+'G7-Cyl-Trial-1_NODES_DISPLACEMENTS.atf')
-    cwd = "C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\AtenaPool\\"+str(idx)
-    command = ["C:\\Program Files (x86)\\CervenkaConsulting\\AtenaV5\\AtenaConsole.exe", "C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\Post_Exp1.atn"]
+    cwd = "G:\\2.Working-Thinh\\AtenaPool\\"+str(idx)
+    command = ["C:\\Program Files (x86)\\CervenkaConsulting\\AtenaV5\\AtenaConsole.exe", "G:\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\Post_Exp1.atn"]
     process = subprocess.Popen(command, cwd=cwd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
     process.wait()
 
@@ -64,8 +64,8 @@ def extractFile(nodeList,fileName,idx, columnIdx):
 
 
 def ExtractResult(idx):
-    nodeList = read_integers_from_file("C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\NodeList_Mid.txt")
-    nodeCenter = read_integers_from_file("C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\NodeList_bodyOpen.txt")
+    nodeList = read_integers_from_file("G:\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\NodeList_Mid.txt")
+    nodeCenter = read_integers_from_file("G:\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\NodeList_bodyOpen.txt")
     strainVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_DISPLACEMENTS.atf",idx,2)
     stressVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_STRESS.atf",idx,2)
     midStrainVal = extractFile(nodeCenter,"G7-Cyl-Trial-1_NODES_DISPLACEMENTS.atf",idx,1)
@@ -76,5 +76,5 @@ def RunSimulationThread(idx, inputData):
     RunSimulation(idx)
     RunTool4Atena(idx)
     outputData = ExtractResult(idx)
-    save_to_file(inputData,outputData,"C:\\Users\\ADMIN\\Documents\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\BurningTest_3dDraw_10-8.txt")
+    save_to_file(inputData,outputData,"G:\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\BurningTest_3dDraw_10-8.txt")
     return outputData
