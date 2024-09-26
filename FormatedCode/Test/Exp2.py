@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\Log_Run_Burning_A_1.txt")
+returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\Log_Run_Burning_2.txt")
 
 param = returnVal[0]
 strain = np.array(returnVal[1])/(-4)
@@ -16,8 +16,8 @@ bodyOpen = np.array(returnVal[3])/(20)
 TrainVal = [[ai, bi, ci] for ai, bi, ci in zip(strain, stress, bodyOpen)]
 TrainVal = np.array(TrainVal)
 
-for i in range(10):
-    index = 10+i
+for i in range(1):
+    index = 10
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 6))
     
     ax1.plot(TrainVal[index][0]*(-4),TrainVal[index][1]*(300), label='Simulation Line', color="blue")
