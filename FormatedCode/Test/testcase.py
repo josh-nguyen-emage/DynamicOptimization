@@ -12,7 +12,7 @@ if __name__ == "__main__":
     # MSE, interpolate = findF(stress, bodyOpen, strain)
 
     # returnVal = RunSimulationThread(0,np.random.rand(11))
-    returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\Log_Run_Bayes_1-7.txt")
+    returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\Log_Run_Bayes_4-7.txt")
     # print(returnVal)
     minIdx = 0
     minMSE = 1000000
@@ -30,6 +30,12 @@ if __name__ == "__main__":
             minIdx = idx
         container.append(MSE)
 
+        # plt.plot(np.concatenate((np.flip(strain),bodyOpen)) , np.concatenate((np.flip(stress),stress)), label = "Simulation")
+        # plt.plot(np.concatenate((np.flip(strain_exp),bodyOpen_exp)) , interpolate, marker = "x", label = "Interpolate")
+        # plt.plot(strain_exp , stress_exp, label = "Experiment",color="green")
+        # plt.plot(bodyOpen_exp , stress_exp,color="green")
+        # plt.show()
+
     param = returnVal[0][minIdx]
     strain = returnVal[1][minIdx]
     stress = returnVal[2][minIdx]
@@ -37,11 +43,16 @@ if __name__ == "__main__":
     MSE, interpolate = findF(stress, bodyOpen, strain)
     print("idx:",minIdx)
     print("MSE:",MSE)
+    print("param:",param)
 
-    # plt.plot(np.concatenate((np.flip(strain),bodyOpen)) , np.concatenate((np.flip(stress),stress)), label = "Simulation")
+    plt.plot(np.concatenate((np.flip(strain),bodyOpen)) , np.concatenate((np.flip(stress),stress)), label = "Simulation")
     # plt.plot(np.concatenate((np.flip(strain_exp),bodyOpen_exp)) , interpolate, marker = "x", label = "Interpolate")
-    # plt.plot(strain_exp , stress_exp, label = "Experiment",color="green")
-    # plt.plot(bodyOpen_exp , stress_exp,color="green")
+    plt.plot(strain_exp , stress_exp, label = "Experiment",color="green")
+    plt.plot(bodyOpen_exp , stress_exp,color="green")
+    plt.xlabel('Strain (‰)')
+    plt.ylabel('Stress (MPa)')
+    plt.legend()
+    plt.show()
 
     # Add titles and labels
     plt.plot(np.array(range(len(container)))/16 , container, label = "MSE", marker = "o", linestyle = '')

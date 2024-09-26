@@ -1,11 +1,12 @@
 
 import datetime
 import sys, os
+sys.path.append(os.path.abspath(os.path.join('.')))
 import re
 import subprocess
 
 
-sys.path.append(os.path.abspath(os.path.join('.')))
+
 import numpy as np
 from scipy.interpolate import interp1d
 
@@ -55,7 +56,11 @@ def read_file(filename):
         secondValue = []
         last_values = []
         last_values2 = []
+        counter = 0
         for line in file:
+            counter += 1
+            if counter > 5000:
+                break
             # Split the line by colon ":"
             parts = line.strip().split(':')
             if len(parts) == 4:
@@ -71,7 +76,6 @@ def read_file(filename):
 
 
 
-# Function to save input and output to a text file
 def save_to_file(inputs, outputs, filename):
     strainVal = outputs[0]
     stressVal = outputs[1]
@@ -83,6 +87,13 @@ def save_to_file(inputs, outputs, filename):
     with open(filename, 'a') as file:
         file.write(' '.join(inStr)+" : "+' '.join(outStrain)+" : "+' '.join(outStress)+" : "+' '.join(outbodyOpen)+"\n")
         
+# Function to save input and output to a text file
+def save_to_file_rilem(inputs, outputs, filename):
+    inStr = [str(num) for num in inputs]
+    array_string = np.array2string(outputs, separator=',')  # Convert array to string
+    with open(filename, 'a') as file:
+        file.write(' '.join(inStr)+" : "+array_string+"\n")
+
 
 def WriteParameter(data,idx):
     data = np.clip(data,0,1)
@@ -98,6 +109,21 @@ def WriteParameter(data,idx):
     C12= data[9]*6000+5000
     E  = data[10]*20000 + 57000
     writeInpFile(K1,C1,C3,C4,C5,C7,C8,C10,C11,C12, E,idx)
+
+def WriteParameterRilem(data,idx):
+    data = np.clip(data,0,1)
+    K1 = data[0]*0.00034+0.000114
+    C1 = data[1]*0.8+0.1
+    C3 = data[2]*70+10
+    C4 = data[3]*220+30
+    C5 = data[4]*3+1
+    C7 = data[5]*250+20
+    C8 = data[6]*16+4
+    C10= data[7]*1.2+0.2
+    C11= data[8]*0.6+0.1
+    C12= data[9]*6000+5000
+    E  = data[10]*20000 + 57000
+    writeInpFileRilem(K1,C1,C3,C4,C5,C7,C8,C10,C11,C12, E,idx)
 
 def writeInpFile(
         K1=0.00027, 
@@ -129,6 +155,41 @@ def writeInpFile(
     lines[63 - 1] = "        C10	"+  "{:.6f}".format(C10) + '\n'
     lines[64 - 1] = "        C11	"+  "{:.6f}".format(C11) + '\n'
     lines[65 - 1] = "        C12	"+  "{:.6f}".format(C12) + '\n'
+
+    # Write the modified content back to the file
+    with open(file_path, 'w') as file:
+        file.writelines(lines)
+
+def writeInpFileRilem(
+        K1=0.00027, 
+        C1=0.62, 
+        C3=4, 
+        C4=70, 
+        C5=2.5, 
+        C7=50, 
+        C8=8, 
+        C10=0.73, 
+        C11=0.2, 
+        C12=7000,
+        E  =66131,
+        idx=0):
+    # Read the content of the file
+    file_path = pathIdx(idx) + 'UHPC-RILEM-2024-V5LZ-M7.inp'
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+
+    # Modify the line with the new text
+    lines[64 - 1] = "        E	"+      "{:.6f}".format(E)  + '\n'
+    lines[70 - 1] = "        K1	"+      "{:.6f}".format(K1)  + '\n'
+    lines[76 - 1] = "        C1	"+      "{:.6f}".format(C1)  + '\n'
+    lines[79 - 1] = "        C3	"+      "{:.6f}".format(C3)  + '\n'
+    lines[81 - 1] = "        C4	"+      "{:.6f}".format(C4)  + '\n'
+    lines[82 - 1] = "        C5	"+      "{:.6f}".format(C5)  + '\n'
+    lines[84 - 1] = "        C7	"+      "{:.6f}".format(C7)  + '\n'
+    lines[85 - 1] = "        C8	"+      "{:.6f}".format(C8)  + '\n'
+    lines[87 - 1] = "        C10	"+  "{:.6f}".format(C10) + '\n'
+    lines[88 - 1] = "        C11	"+  "{:.6f}".format(C11) + '\n'
+    lines[89 - 1] = "        C12	"+  "{:.6f}".format(C12) + '\n'
 
     # Write the modified content back to the file
     with open(file_path, 'w') as file:
