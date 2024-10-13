@@ -50,6 +50,9 @@ stress_exp = list_a
 bodyOpen_exp = list_b
 strain_exp = list_c
 
+def getExpData():
+    return stress_exp,strain_exp,bodyOpen_exp
+
 
 def read_file(filename):
     with open(filename, 'r') as file:
@@ -264,7 +267,6 @@ def findF(stress_run ,bodyOpen_run, strain_run):
 
 def getExpectChart():
     global stress_exp
-    global bodyOpen_exp
     return np.concatenate((np.flip(stress_exp),stress_exp))
 
 def get_arp_table():

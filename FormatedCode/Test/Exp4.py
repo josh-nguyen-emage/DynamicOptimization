@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\Log_Run_Burning_2.txt")
+returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\Log_Run_Bayes_AI_2-7.txt")
 
 param = np.array(returnVal[0])
 strain = np.array(returnVal[1])/(-4)
@@ -30,7 +30,7 @@ for idx in range(len(param)):
 
 print(min(allMSE),stress[idx], bodyOpen[idx], strain[idx])
     
-plt.scatter(param[:,2],allMSE)
+plt.scatter(range(len(allMSE)),allMSE)
 
 plt.xlabel('X-axis')
 plt.ylabel('Y-axis')
