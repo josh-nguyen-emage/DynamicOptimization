@@ -13,7 +13,7 @@ from scipy.interpolate import interp1d
 pathName = "H:\\02.Working-Thinh\\ATENA-WORKING\\"
 
 def pathIdx(idx):
-    return "G:\\2.Working-Thinh\\AtenaPool\\"+str(idx)+"\\"
+    return "G:\\02.Working-Thinh\\AtenaPool\\"+str(idx)+"\\"
 
 def ReadLabFile(filename):
     list_a = []
@@ -35,8 +35,9 @@ def ReadLabFile(filename):
                 print(f"Ignoring line: {line.strip()}. Could not convert values to floats.")
 
     return list_a, list_b, list_c
-if os.path.exists("G:\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile"):
-    filename = 'G:\\2.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
+
+if os.path.exists("G:\\02.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile"):
+    filename = 'G:\\02.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
 else:
     filename = "D:\\1 - Study\\6 - DTW_project\\Container\\stdFile\\G7-Uni-AxialTest.dat"
 
@@ -92,7 +93,7 @@ def save_to_file_rilem(inputs, outputs, filename):
     inStr = [str(num) for num in inputs]
     array_string = np.array2string(outputs, separator=',')  # Convert array to string
     with open(filename, 'a') as file:
-        file.write(' '.join(inStr)+" : "+array_string+"\n")
+        file.write(' '.join(inStr)+" : "+array_string+"\n\n")
 
 
 def WriteParameter(data,idx):
