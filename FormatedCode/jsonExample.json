@@ -1,0 +1,22 @@
+{
+    "Workspace": "D:/1 - Study/6 - DTW_project/Container",
+    "Inp file": "UHPC-RILEM-2024-V5LZ-M7.inp",
+    "Atn file": "Post_Exp1.atn",
+    "Experiment file": "G7-RILEM-BeamTest.dat",
+
+    "X nodeList": "NodeList-At-RightSupport.txt",
+    "Y nodeList": "NodeList-DISP-At-Top.txt",
+
+    "X column": 2,
+    "Y column": 2,
+
+    "X metric": "avg",
+    "Y metric": "sum",
+
+    "X ratio": -1000,
+    "Y ratio": 352,
+
+    "MSE ratio": 0.2,
+    "Number Thread": 4
+  }
+  
