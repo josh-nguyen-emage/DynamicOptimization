@@ -5,15 +5,11 @@ sys.path.append(os.path.abspath(os.path.join('.')))
 import re
 import subprocess
 
-
-
 import numpy as np
 from scipy.interpolate import interp1d
 
-pathName = "H:\\02.Working-Thinh\\ATENA-WORKING\\"
-
 def pathIdx(idx):
-    return "G:\\02.Working-Thinh\\AtenaPool\\"+str(idx)+"\\"
+    return "C:\\BuiDucVinh\\01.Duy Thinh\\AtenaPool\\"+str(idx)+"\\"
 
 def ReadLabFile(filename):
     list_a = []
@@ -36,8 +32,8 @@ def ReadLabFile(filename):
 
     return list_a, list_b, list_c
 
-if os.path.exists("G:\\02.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile"):
-    filename = 'G:\\02.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
+if os.path.exists("C:\\BuiDucVinh\\01.Duy Thinh\\SourceCode\\Container\\stdFile"):
+    filename = 'C:\\BuiDucVinh\\01.Duy Thinh\\SourceCode\\Container\\stdFile\\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
 else:
     filename = "D:\\1 - Study\\6 - DTW_project\\Container\\stdFile\\G7-Uni-AxialTest.dat"
 
