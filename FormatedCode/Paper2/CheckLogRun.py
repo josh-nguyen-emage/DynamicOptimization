@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\Log_Run_Bayes_AI_2-7.txt")
+returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\LogRun_weightMSE.txt")
 # returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\BurningTest_3dDraw_10-8.txt")
 
 param = np.array(returnVal[0])
@@ -27,24 +27,24 @@ for idx in range(len(param)):
     MSE, interpolate = findF(stress[idx], bodyOpen[idx], strain[idx])
     allMSE.append(MSE)
 
-    if (MSE == 0):
+    if (MSE < 600):
         print(idx)
-        # plt.scatter(bodyOpen[idx],stress[idx],label='real Line')
-        # plt.scatter(strain[idx],stress[idx],label='real Line')
-        # plt.scatter(np.concatenate((np.flip(strain_exp),bodyOpen_exp)),getExpectChart(),label='interpolate Line')
-
-        # # Show plot
+        # plt.scatter(bodyOpen[idx],stress[idx],label='Simulate Line')
+        plt.scatter(strain[idx]*-1,stress[idx])
+        # plt.scatter(np.concatenate((np.flip(strain_exp),bodyOpen_exp)),getExpectChart(),label='Experiment line')
+        plt.title('Run ' + str(idx))
+        # Show plot
         # plt.legend()
-        # plt.show()
+        plt.show()
     
 
 print(min(allMSE),stress[idx], bodyOpen[idx], strain[idx])
     
 plt.scatter(range(len(allMSE)),allMSE)
 
-plt.xlabel('X-axis')
-plt.ylabel('Y-axis')
-plt.title('Scatter Plot Example')
+plt.xlabel('Run times')
+plt.ylabel('MSE')
+plt.title('Bayes - AI model')
 
 # Show plot
 plt.show()
