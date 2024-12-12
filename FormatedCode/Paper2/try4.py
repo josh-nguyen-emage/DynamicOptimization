@@ -15,9 +15,17 @@ def generate_data(samples=10000):
     return np.stack((x, y), axis=1), z
 
 # Generate training and testing data
-X, y = generate_data(1000)
-X_train, X_test = X[:800], X[800:]
-y_train, y_test = y[:800], y[800:]
+X = np.loadtxt("Log/x.txt", delimiter=',')
+y = np.loadtxt("Log/y.txt", delimiter=',')
+
+for i in range(len(X)-10,len(X)):
+    x_val = X[i][0]*12-6
+    y_val = X[i][1]*12-6
+    expectResult = (x_val**2+y_val-11)**2 +(x_val+y_val**2-7)**2
+    print(x_val,y_val,y[i],expectResult)
+
+X_train, X_test = X[:170], X[170:]
+y_train, y_test = y[:170], y[170:]
 
 # Build the model
 model = models.Sequential([

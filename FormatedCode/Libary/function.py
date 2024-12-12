@@ -1,6 +1,9 @@
 
 import datetime
 import sys, os
+
+from matplotlib import pyplot as plt
+from matplotlib.patches import Polygon
 sys.path.append(os.path.abspath(os.path.join('.')))
 import re
 import subprocess
@@ -62,8 +65,8 @@ def read_file(filename):
         counter = 0
         for line in file:
             counter += 1
-            if counter > 5000:
-                break
+            # if counter > 5000:
+            #     break
             # Split the line by colon ":"
             parts = line.strip().split(':')
             if len(parts) == 4:
@@ -264,9 +267,86 @@ def findF(stress_run ,bodyOpen_run, strain_run):
     return (np.nanmean(sumSquare1)*0.5+np.nanmean(sumSquare2)*0.5), interpolateArray
     # return np.nanmean(sumSquare1), interpolateArray
 
+def find_first_point_exceeding_threshold(x, y, idx, draw):
+    # Take the first 40% of points for approximation
+    num_points = len(x)
+    approx_points = int(0.3 * num_points)
+
+    threshold_point = None
+
+    for eachPoint in range(approx_points,num_points):
+        coeffs = np.polyfit(x[:eachPoint], y[:eachPoint], 1)
+        approx_line = np.poly1d(coeffs)
+
+        if abs(y[eachPoint] - approx_line(x[eachPoint])) > 5:
+            threshold_point = (x[eachPoint-1], y[eachPoint-1])
+            break
+
+    if threshold_point is None:
+        threshold_point = (x[-1], y[-1])
+
+    # Plotting
+    if draw:
+        plt.figure(figsize=(8, 6))
+        plt.scatter(x, y, label="Input Line", color='blue')
+        plt.plot(x, approx_line(x), label="Approximate Line for Alpha", color='green', linestyle='--')
+        if threshold_point:
+            plt.scatter(*threshold_point, color='red', label="Threshold point")
+
+    top_index = np.argmax(y)
+    polygonX = x[:top_index+1]
+    polygonX = np.append(polygonX,[polygonX[-1],0])
+    polygonY = y[:top_index+1]
+    polygonY = np.append(polygonY,[0,0])
+    polygonCollection = list(zip(polygonX,polygonY))
+    polygon = Polygon(polygonCollection, closed=True, edgecolor='black', facecolor='lightblue')
+
+    if draw:
+        plt.gca().add_patch(polygon)
+        plt.scatter(x[top_index],y[top_index], color='orange', label="Max Value")
+        # Labels and legend
+        plt.xlabel("ε (‰)")
+        plt.ylabel("σ (MPa)")
+        plt.ylim(0, 300)
+        plt.legend()
+        plt.title("Input Line with Approximate Line and Threshold")
+        plt.show()
+        # plt.savefig("Log/"+str(idx)+".png")
+        plt.close()
+
+    slope = coeffs[0]
+    angle_with_x = np.degrees(np.arctan(slope))
+
+    vertices = polygon.get_xy()
+
+    # Calculate the area using the Shoelace formula
+    x = vertices[:, 0]
+    y = vertices[:, 1]
+    area = 0.5 * np.abs(np.dot(x, np.roll(y, 1)) - np.dot(y, np.roll(x, 1)))
+
+    return [angle_with_x, threshold_point[0], threshold_point[1], x[top_index],y[top_index], area]
+
+def findFeatureVal(stress_run ,bodyOpen_run, strain_run):
+    global strain_exp
+    global stress_exp
+    global bodyOpen_exp
+
+    stress_perdict_exp_strain = interpolate_line(strain_run, stress_run,strain_exp)
+    stress_perdict_exp_strain[0] = stress_exp[0]
+    feature = find_first_point_exceeding_threshold(-1*strain_exp,stress_perdict_exp_strain,0,1)
+    return feature
+
 def getExpectChart():
     global stress_exp
     return np.concatenate((np.flip(stress_exp),stress_exp))
+
+def getExpectFeature():
+    global stress_exp
+    global strain_exp
+    feature = find_first_point_exceeding_threshold(-1*strain_exp,stress_exp,0,1)
+    return feature
+
+print(getExpectFeature())
 
 def get_arp_table():
     try:
