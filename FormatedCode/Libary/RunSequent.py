@@ -42,8 +42,8 @@ def RunTool4Atena(idx):
         pass
     cwd = "C:\\BuiDucVinh\\01.Duy Thinh\\AtenaPool\\"+str(idx)
     command = ["C:\\Program Files (x86)\\CervenkaConsulting\\AtenaV5\\AtenaConsole.exe", "C:\\BuiDucVinh\\01.Duy Thinh\\SourceCode\\Container\\stdFile\\Post_Exp2.atn"]
-    # process = subprocess.Popen(command, cwd=cwd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
-    process = subprocess.Popen(command, cwd=cwd, shell=True)
+    process = subprocess.Popen(command, cwd=cwd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
+    # process = subprocess.Popen(command, cwd=cwd, shell=True)
     process.wait()
 
 def RunTool4AtenaRilem(idx):
@@ -120,7 +120,7 @@ def RunSimulationThread(idx, inputData):
     RunSimulation(idx)
     RunTool4Atena(idx)
     outputData = ExtractResult(idx)
-    save_to_file(inputData,outputData,"C:\\BuiDucVinh\\01.Duy Thinh\\SourceCode\\Container\\FDSE2_1217.txt")
+    save_to_file(inputData,outputData,"C:\\BuiDucVinh\\01.Duy Thinh\\SourceCode\\Container\\Phase2_2612.txt")
     return outputData
 
 def RunSimulationRilemThread(idx, inputData):

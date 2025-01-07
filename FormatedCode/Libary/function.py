@@ -243,6 +243,37 @@ def interpolate_line(x_values, y_values, X_interpolate):
 
     return Y_interpolate
 
+def calculate_mse(array1, array2):
+    """
+    Calculate the Mean Squared Error (MSE) between two numpy arrays.
+    
+    For 1D arrays, it returns a single MSE value.
+    For 2D arrays, it calculates the MSE for each pair of corresponding rows 
+    and returns a list of MSE values.
+
+    Parameters:
+        array1 (np.ndarray): First input array.
+        array2 (np.ndarray): Second input array.
+
+    Returns:
+        float or list: MSE value(s) between the arrays.
+    """
+    if array1.ndim == 1:
+        # Calculate MSE for 1D arrays
+        mse = np.mean((array1 - array2) ** 2)
+        return mse
+    elif array1.ndim == 2:
+        # Calculate MSE for each row in 2D arrays
+        mses = []
+        for idx in range(array1.shape[0]):
+            row1 = array1[idx]
+            row2 = array2[idx]
+            mse = np.mean((row1 - row2) ** 2)
+            mses.append(mse)
+        return mses
+    else:
+        raise ValueError("Arrays must be 1D or 2D.")
+
 def calculate_correlation(array1, array2):
     """
     Calculate the correlation coefficient between two numpy arrays.
@@ -266,7 +297,7 @@ def calculate_correlation(array1, array2):
         std2 = np.std(array2)
         covariance = np.mean((array1 - mean1) * (array2 - mean2))
         correlation = covariance / (std1 * std2)
-        return correlation
+        return 1 - abs(correlation)
     elif array1.ndim == 2:
         # Calculate correlation for each row in 2D arrays
         correlations = []
@@ -280,7 +311,8 @@ def calculate_correlation(array1, array2):
             covariance = np.mean((row1 - mean1) * (row2 - mean2))
             correlation = covariance / (std1 * std2)
             correlations.append(correlation)
-        return correlations
+        result = [1 - abs(num) for num in correlations]
+        return result
     else:
         raise ValueError("Arrays must be 1D or 2D.")
 
@@ -293,6 +325,7 @@ def findF(stress_run ,bodyOpen_run, strain_run):
     stress_perdict_exp_strain[0] = stress_exp[0]
     stress_perdict_exp_strain[-1] = stress_perdict_exp_strain[-2]
     sumSquare1 = calculate_correlation(stress_perdict_exp_strain,stress_exp)
+    mse1 = calculate_mse(stress_perdict_exp_strain,stress_exp)
 
     stress_perdict_exp_bodyOpen = interpolate_line(bodyOpen_run, stress_run,bodyOpen_exp)
     stress_perdict_exp_bodyOpen[0] = stress_exp[0]
@@ -305,7 +338,7 @@ def findF(stress_run ,bodyOpen_run, strain_run):
     #     raise ValueError("interpolateArray len is not correct")
 
     # return (np.nanmean(sumSquare1)*0.5+np.nanmean(sumSquare2)*0.5), interpolateArray
-    return sumSquare1, stress_perdict_exp_strain
+    return sumSquare1*mse1, stress_perdict_exp_strain
 
 def find_first_point_exceeding_threshold(x, y, idx, draw):
     # Take the first 40% of points for approximation
