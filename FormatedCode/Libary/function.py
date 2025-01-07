@@ -8,15 +8,11 @@ sys.path.append(os.path.abspath(os.path.join('.')))
 import re
 import subprocess
 
-
-
 import numpy as np
 from scipy.interpolate import interp1d
 
-pathName = "H:\\02.Working-Thinh\\ATENA-WORKING\\"
-
 def pathIdx(idx):
-    return "G:\\02.Working-Thinh\\AtenaPool\\"+str(idx)+"\\"
+    return "C:\\BuiDucVinh\\01.Duy Thinh\\AtenaPool\\"+str(idx)+"\\"
 
 def ReadLabFile(filename):
     list_a = []
@@ -39,13 +35,13 @@ def ReadLabFile(filename):
 
     return list_a, list_b, list_c
 
-if os.path.exists("G:\\02.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile"):
-    filename = 'G:\\02.Working-Thinh\\DynamicOptimization-ST\\Container\\stdFile\\G7-Uni-AxialTest.dat'  # Replace 'data.txt' with your file path
+if os.path.exists("C:\\BuiDucVinh\\01.Duy Thinh\\SourceCode\\Container\\stdFile"):
+    filename = 'C:\\BuiDucVinh\\01.Duy Thinh\\SourceCode\\Container\\stdFile\\ACI_239C_processed.dat'  # Replace 'data.txt' with your file path
 else:
-    filename = "D:\\1 - Study\\6 - DTW_project\\Container\\stdFile\\G7-Uni-AxialTest.dat"
+    filename = "D:\\1 - Study\\6 - DTW_project\\Container\\stdFile\\ACI_239C_processed.dat"
 
 list_a, list_b, list_c = ReadLabFile(filename)
-list_c = np.array(list_c)*(1000)
+list_c = np.array(list_c)*(-1000)
 list_b = np.array(list_b)*(1000)
 list_a = np.array(list_a)
 
@@ -146,7 +142,7 @@ def writeInpFile(
         E  =66131,
         idx=0):
     # Read the content of the file
-    file_path = pathIdx(idx) + 'G7-Cyl-Trial-1.inp'
+    file_path = pathIdx(idx) + 'G7-Cyl-Trial-2.inp'
     with open(file_path, 'r') as file:
         lines = file.readlines()
 
@@ -247,6 +243,79 @@ def interpolate_line(x_values, y_values, X_interpolate):
 
     return Y_interpolate
 
+def calculate_correlation(array1, array2):
+    """
+    Calculate the correlation coefficient between two numpy arrays.
+    
+    For 1D arrays, it returns a single correlation value.
+    For 2D arrays, it calculates the correlation for each pair of corresponding rows 
+    and returns a list of correlation values.
+
+    Parameters:
+        array1 (np.ndarray): First input array.
+        array2 (np.ndarray): Second input array.
+
+    Returns:
+        float or list: Correlation coefficient(s) between the arrays.
+    """
+    if array1.ndim == 1:
+        # Calculate correlation for 1D arrays
+        mean1 = np.mean(array1)
+        mean2 = np.mean(array2)
+        std1 = np.std(array1)
+        std2 = np.std(array2)
+        covariance = np.mean((array1 - mean1) * (array2 - mean2))
+        correlation = covariance / (std1 * std2)
+        return abs(correlation)
+    elif array1.ndim == 2:
+        # Calculate correlation for each row in 2D arrays
+        correlations = []
+        for idx in range(array1.shape[0]):
+            row1 = array1[idx]
+            row2 = array2
+            mean1 = np.mean(row1)
+            mean2 = np.mean(row2)
+            std1 = np.std(row1)
+            std2 = np.std(row2)
+            covariance = np.mean((row1 - mean1) * (row2 - mean2))
+            correlation = covariance / (std1 * std2)
+            correlations.append(correlation)
+        return abs(correlations)
+    else:
+        raise ValueError("Arrays must be 1D or 2D.")
+    
+def calculate_mse(array1, array2):
+    """
+    Calculate the Mean Squared Error (MSE) between two numpy arrays.
+    
+    For 1D arrays, it returns a single MSE value.
+    For 2D arrays, it calculates the MSE for each pair of corresponding rows 
+    and returns a list of MSE values.
+
+    Parameters:
+        array1 (np.ndarray): First input array.
+        array2 (np.ndarray): Second input array.
+
+    Returns:
+        float or list: MSE value(s) between the arrays.
+    """
+    if array1.ndim == 1:
+        # Calculate MSE for 1D arrays
+        mse = np.mean((array1 - array2) ** 2)
+        return mse
+    elif array1.ndim == 2:
+        # Calculate MSE for each row in 2D arrays
+        mses = []
+        for idx in range(array1.shape[0]):
+            row1 = array1[idx]
+            row2 = array2[idx]
+            mse = np.mean((row1 - row2) ** 2)
+            mses.append(mse)
+        return mses
+    else:
+        raise ValueError("Arrays must be 1D or 2D.")
+
+
 def findF(stress_run ,bodyOpen_run, strain_run):
     global strain_exp
     global stress_exp
@@ -254,19 +323,23 @@ def findF(stress_run ,bodyOpen_run, strain_run):
 
     stress_perdict_exp_strain = interpolate_line(strain_run, stress_run,strain_exp)
     stress_perdict_exp_strain[0] = stress_exp[0]
-    sumSquare1 = (stress_perdict_exp_strain-stress_exp)**2
+    stress_perdict_exp_strain[-1] = stress_perdict_exp_strain[-2]
+    sumSquare1 = calculate_correlation(stress_perdict_exp_strain,stress_exp)
+    mse1 = calculate_mse(stress_perdict_exp_strain,stress_exp)
+    print(sumSquare1,mse1)
 
     stress_perdict_exp_bodyOpen = interpolate_line(bodyOpen_run, stress_run,bodyOpen_exp)
     stress_perdict_exp_bodyOpen[0] = stress_exp[0]
-    sumSquare2 = (stress_perdict_exp_bodyOpen-stress_exp)**2
-    interpolateArray = np.concatenate((np.flip(stress_perdict_exp_strain), stress_perdict_exp_bodyOpen))
-    interpolateArray[np.isnan(interpolateArray)] = 300
+    sumSquare2 = calculate_correlation(stress_perdict_exp_bodyOpen,stress_exp)
 
-    if len(interpolateArray) != 150:
-        raise ValueError("interpolateArray len is not correct")
+    # interpolateArray = np.concatenate((np.flip(stress_perdict_exp_strain), stress_perdict_exp_bodyOpen))
+    # interpolateArray[np.isnan(interpolateArray)] = 300
 
-    return (np.nanmean(sumSquare1)*0.5+np.nanmean(sumSquare2)*0.5), interpolateArray
-    # return np.nanmean(sumSquare1), interpolateArray
+    # if len(interpolateArray) != 150:
+    #     raise ValueError("interpolateArray len is not correct")
+
+    # return (np.nanmean(sumSquare1)*0.5+np.nanmean(sumSquare2)*0.5), interpolateArray
+    return sumSquare1*mse1, stress_perdict_exp_strain
 
 def find_first_point_exceeding_threshold(x, y, idx, draw):
     # Take the first 40% of points for approximation
@@ -334,20 +407,19 @@ def findFeatureVal(stress_run ,bodyOpen_run, strain_run):
 
     stress_perdict_exp_strain = interpolate_line(strain_run, stress_run,strain_exp)
     stress_perdict_exp_strain[0] = stress_exp[0]
-    feature = find_first_point_exceeding_threshold(-1*strain_exp,stress_perdict_exp_strain,0,1)
+    feature = find_first_point_exceeding_threshold(-1*strain_exp,stress_perdict_exp_strain,0,0)
     return feature
 
 def getExpectChart():
     global stress_exp
-    return np.concatenate((np.flip(stress_exp),stress_exp))
+    # return np.concatenate((np.flip(stress_exp),stress_exp))
+    return stress_exp
 
 def getExpectFeature():
     global stress_exp
     global strain_exp
-    feature = find_first_point_exceeding_threshold(-1*strain_exp,stress_exp,0,1)
+    feature = find_first_point_exceeding_threshold(-1*strain_exp,stress_exp,0,0)
     return feature
-
-print(getExpectFeature())
 
 def get_arp_table():
     try:
