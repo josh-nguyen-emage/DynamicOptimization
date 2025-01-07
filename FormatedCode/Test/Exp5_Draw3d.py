@@ -106,6 +106,7 @@ for firstIdx in [0,1,4,5,7,10]:
         fig.colorbar(surf, ax=ax, shrink=0.5, aspect=5, label='Interpolated Value')
 
         plt.legend()
-        plt.savefig(str(firstIdx)+"-"+str(secondIdx)+".png")
+        # plt.savefig(str(firstIdx)+"-"+str(secondIdx)+".png")
+        plt.show()
 
 

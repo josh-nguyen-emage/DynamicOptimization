@@ -243,6 +243,47 @@ def interpolate_line(x_values, y_values, X_interpolate):
 
     return Y_interpolate
 
+def calculate_correlation(array1, array2):
+    """
+    Calculate the correlation coefficient between two numpy arrays.
+    
+    For 1D arrays, it returns a single correlation value.
+    For 2D arrays, it calculates the correlation for each pair of corresponding rows 
+    and returns a list of correlation values.
+
+    Parameters:
+        array1 (np.ndarray): First input array.
+        array2 (np.ndarray): Second input array.
+
+    Returns:
+        float or list: Correlation coefficient(s) between the arrays.
+    """
+    if array1.ndim == 1:
+        # Calculate correlation for 1D arrays
+        mean1 = np.mean(array1)
+        mean2 = np.mean(array2)
+        std1 = np.std(array1)
+        std2 = np.std(array2)
+        covariance = np.mean((array1 - mean1) * (array2 - mean2))
+        correlation = covariance / (std1 * std2)
+        return abs(correlation)
+    elif array1.ndim == 2:
+        # Calculate correlation for each row in 2D arrays
+        correlations = []
+        for idx in range(array1.shape[0]):
+            row1 = array1[idx]
+            row2 = array2
+            mean1 = np.mean(row1)
+            mean2 = np.mean(row2)
+            std1 = np.std(row1)
+            std2 = np.std(row2)
+            covariance = np.mean((row1 - mean1) * (row2 - mean2))
+            correlation = covariance / (std1 * std2)
+            correlations.append(correlation)
+        return abs(correlations)
+    else:
+        raise ValueError("Arrays must be 1D or 2D.")
+    
 def calculate_mse(array1, array2):
     """
     Calculate the Mean Squared Error (MSE) between two numpy arrays.
@@ -326,6 +367,7 @@ def findF(stress_run ,bodyOpen_run, strain_run):
     stress_perdict_exp_strain[-1] = stress_perdict_exp_strain[-2]
     sumSquare1 = calculate_correlation(stress_perdict_exp_strain,stress_exp)
     mse1 = calculate_mse(stress_perdict_exp_strain,stress_exp)
+    print(sumSquare1,mse1)
 
     stress_perdict_exp_bodyOpen = interpolate_line(bodyOpen_run, stress_run,bodyOpen_exp)
     stress_perdict_exp_bodyOpen[0] = stress_exp[0]
