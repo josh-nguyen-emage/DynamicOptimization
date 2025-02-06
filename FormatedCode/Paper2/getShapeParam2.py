@@ -99,9 +99,7 @@ stress_exp,strain_exp,bodyOpen_exp = getExpData()
 for idx in range(len(param)):
     MSE, interpolate = findF(stress[idx], bodyOpen[idx], strain[idx])
 
-    
-
-    shapeValue = find_first_point_exceeding_threshold(strain[idx]*-1,stress[idx],idx,1)
+    shapeValue = find_first_point_exceeding_threshold(strain[idx]*-1,stress[idx],idx,0)
 
     print(idx)
 

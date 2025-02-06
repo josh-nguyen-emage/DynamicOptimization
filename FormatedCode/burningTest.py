@@ -4,16 +4,16 @@ import time
 import threading
 
 
-from Libary.RunSequent import RunSimulationThread
+from Libary.RunSequent import RunSimulationThread, RunSimulationRilemThread
 from Libary.function import *
 
 def Process(idx):
     while True:
         param = np.random.rand(11)
-        RunSimulationThread(idx,param)
+        RunSimulationRilemThread(idx,param)
         printWithTime(" Idx "+str(idx)+" done")
        
-numThread = 16
+numThread = 2
 
 
 # Create a list to hold the thread objects
