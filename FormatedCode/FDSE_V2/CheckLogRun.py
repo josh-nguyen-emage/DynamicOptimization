@@ -6,6 +6,10 @@ from Phase1 import read_file
 import numpy as np
 import matplotlib.pyplot as plt
 
+def write_arrays_to_file(arr1, arr2, txt_file):
+    with open(txt_file, 'w') as f:
+        for a, b in zip(arr1, arr2):
+            f.write(f"{a} {b}\n")
 
 returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\Phase2_2612.txt")
 # returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\BurningTest_3dDraw_10-8.txt")
@@ -51,6 +55,9 @@ plt.ylabel("σ MPa")
 # Show plot
 plt.legend()
 plt.show()
+
+write_arrays_to_file(-1*strain_exp,interpolate,"Atena Sim FDSE2 P2.txt")
+write_arrays_to_file(-1*strain_exp,getExpectChart(),"Real Experiment FDSE2 P2.txt")
 
 print(min(allMSE),calculate_correlation(interpolate,getExpectChart()))
     

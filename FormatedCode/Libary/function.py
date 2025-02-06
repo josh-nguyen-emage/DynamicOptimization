@@ -41,8 +41,8 @@ else:
     filename = "D:\\1 - Study\\6 - DTW_project\\Container\\stdFile\\ACI_239C_processed.dat"
 
 list_a, list_b, list_c = ReadLabFile(filename)
-list_c = np.array(list_c)*(-1000)
-list_b = np.array(list_b)*(1000)
+list_c = np.array(list_c)
+list_b = np.array(list_b)
 list_a = np.array(list_a)
 
 stress_exp = list_a
@@ -142,7 +142,7 @@ def writeInpFile(
         E  =66131,
         idx=0):
     # Read the content of the file
-    file_path = pathIdx(idx) + 'G7-Cyl-Trial-2.inp'
+    file_path = pathIdx(idx) + 'G7-Cyl-Trial-1.inp'
     with open(file_path, 'r') as file:
         lines = file.readlines()
 

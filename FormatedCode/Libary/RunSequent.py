@@ -7,8 +7,8 @@ from Libary.function import *
 
 def RunSimulation(idx):
     cwd = "C:\\BuiDucVinh\\01.Duy Thinh\\AtenaPool\\"+str(idx)
-    command = ["C:\\Program Files (x86)\\CervenkaConsulting\\AtenaV5\\AtenaConsole.exe", cwd + "\\G7-Cyl-Trial-2.inp", "a.out", "a.msg", "a.err"]
-    # command = ["cmd","/K","start","/B","ATENA calculation","%AtenaConsole64%","/M","CCStructures","/execute","/catch_fp_instructs","/o", cwd + "\\G7-Cyl-Trial-2.inp", "a.out", "a.msg", "a.err","/num_unused_threads=2","/num_iters_per_thread=0"]
+    command = ["C:\\Program Files (x86)\\CervenkaConsulting\\AtenaV5\\AtenaConsole.exe", cwd + "\\G7-Cyl-Trial-1.inp", "a.out", "a.msg", "a.err"]
+    # command = ["cmd","/K","start","/B","ATENA calculation","%AtenaConsole64%","/M","CCStructures","/execute","/catch_fp_instructs","/o", cwd + "\\G7-Cyl-Trial-1.inp", "a.out", "a.msg", "a.err","/num_unused_threads=2","/num_iters_per_thread=0"]
     process = subprocess.Popen(command, cwd=cwd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
     # process = subprocess.Popen(command, cwd=cwd, shell=True)
     process.wait()
@@ -31,17 +31,17 @@ def RunSimulationRilem(idx):
 
 def RunTool4Atena(idx):
     try:
-        if os.path.exists(pathIdx(idx)+'G7-Cyl-Trial-2_NODES_REACTIONS.atf'):
-            os.remove(pathIdx(idx)+'G7-Cyl-Trial-2_NODES_REACTIONS.atf')
-            os.remove(pathIdx(idx)+'G7-Cyl-Trial-2_NODES_STRESS.atf')
-            os.remove(pathIdx(idx)+'G7-Cyl-Trial-2_NODES_DISPLACEMENTS.atf')
+        if os.path.exists(pathIdx(idx)+'G7-Cyl-Trial-1_NODES_REACTIONS.atf'):
+            os.remove(pathIdx(idx)+'G7-Cyl-Trial-1_NODES_REACTIONS.atf')
+            os.remove(pathIdx(idx)+'G7-Cyl-Trial-1_NODES_STRESS.atf')
+            os.remove(pathIdx(idx)+'G7-Cyl-Trial-1_NODES_DISPLACEMENTS.atf')
             os.remove(pathIdx(idx)+'a.err')
             os.remove(pathIdx(idx)+'a.msg')
             os.remove(pathIdx(idx)+'a.out')
     except:
         pass
     cwd = "C:\\BuiDucVinh\\01.Duy Thinh\\AtenaPool\\"+str(idx)
-    command = ["C:\\Program Files (x86)\\CervenkaConsulting\\AtenaV5\\AtenaConsole.exe", "C:\\BuiDucVinh\\01.Duy Thinh\\SourceCode\\Container\\stdFile\\Post_Exp2.atn"]
+    command = ["C:\\Program Files (x86)\\CervenkaConsulting\\AtenaV5\\AtenaConsole.exe", "C:\\BuiDucVinh\\01.Duy Thinh\\SourceCode\\Container\\stdFile\\Post_Exp1.atn"]
     process = subprocess.Popen(command, cwd=cwd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
     # process = subprocess.Popen(command, cwd=cwd, shell=True)
     process.wait()
@@ -102,9 +102,9 @@ def extractFile(nodeList,fileName,idx, columnIdx, value = "avg"):
 def ExtractResult(idx):
     nodeList = read_integers_from_file("C:\\BuiDucVinh\\01.Duy Thinh\\SourceCode\\Container\\stdFile\\NodeList_Mid.txt")
     nodeCenter = read_integers_from_file("C:\\BuiDucVinh\\01.Duy Thinh\\SourceCode\\Container\\stdFile\\NodeList_bodyOpen.txt")
-    strainVal = extractFile(nodeList,"G7-Cyl-Trial-2_NODES_DISPLACEMENTS.atf",idx,2)
-    stressVal = extractFile(nodeList,"G7-Cyl-Trial-2_NODES_STRESS.atf",idx,2)
-    midStrainVal = extractFile(nodeCenter,"G7-Cyl-Trial-2_NODES_DISPLACEMENTS.atf",idx,1)
+    strainVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_DISPLACEMENTS.atf",idx,2)
+    stressVal = extractFile(nodeList,"G7-Cyl-Trial-1_NODES_STRESS.atf",idx,2)
+    midStrainVal = extractFile(nodeCenter,"G7-Cyl-Trial-1_NODES_DISPLACEMENTS.atf",idx,1)
     return [1000*1000*np.array(strainVal)[0:51]/150, -1*np.array(stressVal)[0:51], 1000*np.array(midStrainVal)[0:51]/0.075]
 
 def ExtractResultRilem(idx):
@@ -120,7 +120,7 @@ def RunSimulationThread(idx, inputData):
     RunSimulation(idx)
     RunTool4Atena(idx)
     outputData = ExtractResult(idx)
-    save_to_file(inputData,outputData,"C:\\BuiDucVinh\\01.Duy Thinh\\SourceCode\\Container\\Phase2_2612.txt")
+    save_to_file(inputData,outputData,"C:\\BuiDucVinh\\01.Duy Thinh\\SourceCode\\Container\\Phase1_FDSEV2_0602.txt")
     return outputData
 
 def RunSimulationRilemThread(idx, inputData):

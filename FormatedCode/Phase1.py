@@ -15,7 +15,7 @@ def create_model():
         layers.Dense(128, activation='relu'),
         layers.Dense(256, activation='relu'),
         layers.Dense(128, activation='relu'),
-        layers.Dense(75, activation='sigmoid')
+        layers.Dense(83, activation='sigmoid')
     ])
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     return model

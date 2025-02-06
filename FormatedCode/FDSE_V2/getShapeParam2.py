@@ -110,8 +110,8 @@ for idx in range(len(param)):
     #     break
 
 print(len(param),"done")
-np.savetxt('FDSE_V2/shapeValue.txt', allShapeValue, fmt='%f')
-np.savetxt('FDSE_V2/shapeParam.txt', allParam, fmt='%f')
+# np.savetxt('FDSE_V2/shapeValue.txt', allShapeValue, fmt='%f')
+# np.savetxt('FDSE_V2/shapeParam.txt', allParam, fmt='%f')
 
 # allShapeValue = np.array(allShapeValue)
 # allParam = np.array(allParam)
