@@ -1,7 +1,7 @@
 import sys, os
 sys.path.append(os.path.abspath(os.path.join('.')))
 
-from Libary.function import WriteParameter, calculate_correlation, findF, getExpData, getExpectChart
+from Libary.function import *
 from Phase1 import read_file
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,7 +11,7 @@ def write_arrays_to_file(arr1, arr2, txt_file):
         for a, b in zip(arr1, arr2):
             f.write(f"{a} {b}\n")
 
-returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\Phase2_2612.txt")
+returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\FDSE2_1223.txt")
 # returnVal = read_file("D:\\1 - Study\\6 - DTW_project\\Container\\BurningTest_3dDraw_10-8.txt")
 
 param = np.array(returnVal[0])
@@ -42,13 +42,17 @@ for idx in range(len(param)):
     #     # Show plot
     #     # plt.legend()
     #     plt.show()
-minIdx = 48
+
 minIdx = allMSE.index(min(allMSE))
+print("min idx",minIdx)
+a = param[minIdx]
+WriteParameter(a,0)
 MSE, interpolate = findF(stress[minIdx], bodyOpen[minIdx], strain[minIdx])
 # plt.scatter(bodyOpen[minIdx],stress[minIdx],label='Simulate Line')
-# plt.scatter(strain[minIdx],stress[minIdx],label='Simulate Line')
-plt.plot(-1*strain_exp,interpolate,'o-',label='Atena Simulation')
+plt.plot(-1*strain[minIdx],stress[minIdx],'o-',label='Simulate Line')
 plt.plot(-1*strain_exp,getExpectChart(),'o-',label='Real Experiment')
+# plt.plot(-1*strain_exp,interpolate,'o-',label='Atena Simulation')
+
 plt.title('Run ' + str(minIdx))
 plt.xlabel("ε (‰)")
 plt.ylabel("σ MPa")
@@ -56,18 +60,19 @@ plt.ylabel("σ MPa")
 plt.legend()
 plt.show()
 
-write_arrays_to_file(-1*strain_exp,interpolate,"Atena Sim FDSE2 P2.txt")
-write_arrays_to_file(-1*strain_exp,getExpectChart(),"Real Experiment FDSE2 P2.txt")
+# write_arrays_to_file(-1*strain_exp,interpolate,"Atena Sim FDSE2 P2.txt")
+# write_arrays_to_file(-1*strain_exp,getExpectChart(),"Real Experiment FDSE2 P2.txt")
 
 print(min(allMSE),calculate_correlation(interpolate,getExpectChart()))
     
-plt.scatter(range(len(allMSE)),allMSE)
+# plt.scatter(range(len(allMSE)),allMSE)
+# plt.xlabel('Run times')
+# plt.ylabel('MSE')
+# plt.title('Bayes - AI model')
+# # Show plot
+# plt.show()
 
-plt.xlabel('Run times')
-plt.ylabel('MSE')
-plt.title('Bayes - AI model')
-
-# Show plot
-plt.show()
+write_arrays_to_txt("FDSEV2 P3.txt",[-1*strain_exp,getExpectChart()],[-1*strain[minIdx],stress[minIdx]])
+# np.savetxt("FDSEV2 P2.txt", [-1*strain_exp,getExpectChart(),-1*strain_exp,interpolate], fmt="%f")
 
 

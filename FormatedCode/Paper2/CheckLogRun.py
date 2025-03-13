@@ -29,11 +29,10 @@ for idx in range(len(param)):
 
     if (MSE < 50):
         print(idx)
-        plt.scatter(bodyOpen[idx],stress[idx],label='Simulate Line')
+        # plt.scatter(bodyOpen[idx],stress[idx],label='Simulate Line')
         plt.scatter(strain[idx],stress[idx],label='Simulate Line')
-        plt.scatter(np.concatenate((np.flip(strain_exp),bodyOpen_exp)),getExpectChart(),label='Experiment line')
+        plt.scatter(strain_exp,getExpectChart(),label='Experiment line')
         plt.title('Run ' + str(idx))
-        WriteParameter(param[idx],0)
         # Show plot
         # plt.legend()
         plt.show()
@@ -49,5 +48,7 @@ plt.title('Bayes - AI model')
 
 # Show plot
 plt.show()
+
+np.savetxt("tmpResult.txt", [stress[idx], bodyOpen[idx], strain[idx]], fmt="%f")
 
 

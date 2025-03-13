@@ -41,13 +41,10 @@ else:
     filename = "D:\\1 - Study\\6 - DTW_project\\Container\\stdFile\\ACI_239C_processed.dat"
 
 list_a, list_b, list_c = ReadLabFile(filename)
-list_c = np.array(list_c)
-list_b = np.array(list_b)
-list_a = np.array(list_a)
 
-stress_exp = list_a
-bodyOpen_exp = list_b
-strain_exp = list_c
+stress_exp = np.array(list_a)
+bodyOpen_exp = np.array(list_b)
+strain_exp = np.array(list_c)*-1000
 
 def getExpData():
     return stress_exp,strain_exp,bodyOpen_exp
@@ -367,7 +364,6 @@ def findF(stress_run ,bodyOpen_run, strain_run):
     stress_perdict_exp_strain[-1] = stress_perdict_exp_strain[-2]
     sumSquare1 = calculate_correlation(stress_perdict_exp_strain,stress_exp)
     mse1 = calculate_mse(stress_perdict_exp_strain,stress_exp)
-    print(sumSquare1,mse1)
 
     stress_perdict_exp_bodyOpen = interpolate_line(bodyOpen_run, stress_run,bodyOpen_exp)
     stress_perdict_exp_bodyOpen[0] = stress_exp[0]
@@ -486,3 +482,32 @@ def check_mac_address(target_mac):
             return True
     return False
 
+import numpy as np
+
+def write_arrays_to_txt(filename, A, B):
+    """Writes two 2*n NumPy arrays A and B to a text file."""
+    with open(filename, "w") as f:
+        # Write the shape of A
+        np.savetxt(f, A, fmt="%.6f", delimiter=",")  # Save A
+        f.write("\n")  # Separate A and B with a blank line
+        np.savetxt(f, B, fmt="%.6f", delimiter=",")  # Save B
+
+def read_arrays_from_txt(filename):
+    """Reads two 2*n NumPy arrays from a text file."""
+    with open(filename, "r") as f:
+        content = f.read().strip()
+    
+    # Split by blank line (assuming blank line separates A and B)
+    parts = content.split("\n\n")
+    
+    # Read A and B separately
+    A = np.loadtxt(parts[0].split("\n"), delimiter=",")
+    B = np.loadtxt(parts[1].split("\n"), delimiter=",")
+    
+    # Ensure correct shapes (handling cases where n = 1)
+    if A.ndim == 1:
+        A = A.reshape(2, -1)
+    if B.ndim == 1:
+        B = B.reshape(2, -1)
+    
+    return A, B
